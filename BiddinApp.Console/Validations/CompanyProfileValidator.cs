@@ -10,8 +10,10 @@ namespace BiddingApp.Validations
 {
     internal class CompanyProfileValidator : AbstractValidator<CompanyProfile>
     {
-        CompanyProfileValidator()
+        public CompanyProfileValidator()
         {
+            RuleFor(company => company.CompanyName).NotNull().NotEmpty();
+            RuleFor(company => company.IBAN).NotNull().NotEmpty();
             RuleFor(company => company.CompanyBalance).Must(x => x >= 0);
             RuleFor(company => company.StrikeNumber).InclusiveBetween(0, 3);
         }

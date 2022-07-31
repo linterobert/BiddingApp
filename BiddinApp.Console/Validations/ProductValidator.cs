@@ -10,10 +10,12 @@ namespace BiddingApp.Validations
 {
     internal class ProductValidator : AbstractValidator<Product>
     {
-        ProductValidator()
+        public ProductValidator()
         {
             RuleFor(product => product.StartPrice).Must(x => x > 0.00);
             RuleFor(product => product.company).NotNull();
+            RuleFor(product => product.ProductName).NotEmpty().NotNull();
+            RuleFor(product => product.FinalTime).GreaterThan(product => product.PostTime);
         }
     }
 }

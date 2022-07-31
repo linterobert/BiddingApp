@@ -10,9 +10,9 @@ namespace BiddingApp.Validations
 {
     internal class ClientProfileValidator : AbstractValidator<ClientProfile>
     {
-        ClientProfileValidator()
+        public ClientProfileValidator()
         {
-            RuleFor(client => client.Balance).GreaterThan(0.00);
+            RuleFor(client => client.Balance).GreaterThanOrEqualTo(0.00);
             RuleFor(client => client.ClientName).NotNull().NotEmpty().WithMessage("You must enter your name!");
         }
     }

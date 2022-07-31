@@ -55,6 +55,7 @@ namespace BiddingApp.Models
             return toReturn;
         }
         public double StartPrice { get { return _startPrice; } set { _startPrice = value; } }
+        public DateTime PostTime { get { return _postTime; } set { _postTime = value; } }
         public bool CheckAvailable()
         {
             if (FinalTime.CompareTo(_postTime) > 0) return true;

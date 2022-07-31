@@ -1,4 +1,9 @@
 ﻿using BiddingApp.Models;
+using BiddingApp.Validations;
+using FluentValidation.Results;
+//CardValidator cardValidator = new CardValidator();
+
+ValidationResult validator = new ValidationResult();
 
 List<ClientProfile> clienti = new List<ClientProfile>();
 List<Card> carduri = new List<Card>();
@@ -8,7 +13,7 @@ bool ok = true;
 
 ClientProfile george = new ClientProfile("George");
 DateTime x = DateTime.ParseExact("2023.02.02 12:30", "yyyy.MM.dd HH:mm", System.Globalization.CultureInfo.InvariantCulture);
-Card c0 = new Card("1111 2222 3333 4444", "234", "233", "George", x);
+Card c0 = new Card("1111 2222 3333 4444", "234", "2334", "George", x);
 clienti.Add(george);
 george.AddCard(c0);
 carduri.Add(c0);
@@ -54,9 +59,22 @@ while (ok)
                     Console.Write("Introduceti numele: ");
                     string nnume = Console.ReadLine();
                     ClientProfile client = new ClientProfile(nnume);
-                    clienti.Add(client);
-                    Console.ForegroundColor = ConsoleColor.DarkGreen;
-                    Console.WriteLine("Cont realizat cu succes!");
+                    ClientProfileValidator clientValidator = new ClientProfileValidator();
+                    validator = clientValidator.Validate(client);
+                    if (validator.IsValid)
+                    {
+                        clienti.Add(client);
+                        Console.ForegroundColor = ConsoleColor.DarkGreen;
+                        Console.WriteLine("Cont realizat cu succes!");
+                    }
+                    else
+                    {
+                        foreach(var error in validator.Errors)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine(error);
+                        }
+                    }
                 }
                 catch
                 {
@@ -106,7 +124,7 @@ while (ok)
                     Console.WriteLine("Optiune aleasa: adaugare card nou");
                     Console.Write("Introduceti numele: ");
                     string nume = Console.ReadLine();
-                    ClientProfile client1 = clienti.Find(client => client.ClientName == nume);
+                    ClientProfile client = clienti.Find(clientm => clientm.ClientName == nume);
                     Console.Write("Introduceti numarul cardului: ");
                     string cardnum = Console.ReadLine();
                     Console.Write("Introduceti codul CVC: ");
@@ -119,8 +137,22 @@ while (ok)
                     string datac = Console.ReadLine();
                     DateTime data = DateTime.ParseExact(datac, format, System.Globalization.CultureInfo.InvariantCulture);
                     Card card = new Card(cardnum, cvc, pin, nume, data);
-                    client1.AddCard(card);
-                    carduri.Add(card);
+                    CardValidator cardValidator = new CardValidator();
+                    validator = cardValidator.Validate(card);
+                    if (validator.IsValid)
+                    {
+                        client.AddCard(card);
+                        carduri.Add(card);
+                    }
+                    else
+                    {
+                        foreach(var error in validator.Errors)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine(error);
+                        }
+                    }
+
                 }
                 catch
                 {
@@ -230,11 +262,26 @@ while (ok)
                 {
                     Console.WriteLine("Optiune aleasa: creare profil companie");
                     Console.Write("Introduceti numele companiei: ");
-                    string nume1 = Console.ReadLine();
+                    string nume = Console.ReadLine();
                     Console.Write("Introduceti IBAN-ul companiei: ");
                     string iban = Console.ReadLine();
-                    CompanyProfile companyProfile = new CompanyProfile(nume1, iban);
-                    companyprofiles.Add(companyProfile);
+                    CompanyProfile companyProfile = new CompanyProfile(nume, iban);
+                    CompanyProfileValidator companyValidator = new CompanyProfileValidator();
+                    validator = companyValidator.Validate(companyProfile);
+                    if (validator.IsValid)
+                    {
+                        companyprofiles.Add(companyProfile);
+                        Console.ForegroundColor = ConsoleColor.DarkGreen;
+                        Console.WriteLine("Company profile created successfully!");
+                    }
+                    else
+                    {
+                        foreach(var error in validator.Errors)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine(error);
+                        }
+                    }
                 }
                 catch
                 {
@@ -252,8 +299,8 @@ while (ok)
                 {
                     Console.WriteLine("Optiune aleasa: vizualizare profil companie");
                     Console.Write("Introduceti numele companiei: ");
-                    string nume4 = Console.ReadLine();
-                    Console.Write(companyprofiles.Find(client => client.CompanyName == nume4));
+                    string name = Console.ReadLine();
+                    Console.Write(companyprofiles.Find(client => client.CompanyName == name));
 
                 }
                 catch
@@ -292,10 +339,23 @@ while (ok)
                     CompanyProfile company = companyprofiles.Find(company => company.CompanyName == companyname);
                     DateTime expirare = DateTime.ParseExact(datac3, format3, System.Globalization.CultureInfo.InvariantCulture);
                     Product product = new Product(productname, price, expirare, company);
-                    company.AddProduct(product);
-                    products.Add(product);
-                    Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine("Produs adaugat cu succes!");
+                    ProductValidator productValidator = new ProductValidator();
+                    validator = productValidator.Validate(product);
+                    if (validator.IsValid)
+                    {
+                        company.AddProduct(product);
+                        products.Add(product);
+                        Console.ForegroundColor = ConsoleColor.DarkGreen;
+                        Console.WriteLine("Produs adaugat cu succes!");
+                    }
+                    else
+                    {
+                        foreach(var error in validator.Errors)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine(error);
+                        }
+                    }
                 }
                 catch (ArgumentNullException)
                 {

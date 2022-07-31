@@ -1,4 +1,6 @@
-﻿using System;
+﻿using BiddingApp.Validations;
+using FluentValidation.Results;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -137,8 +139,23 @@ namespace BiddingApp.Models
             if (produs == 0)
             {
                 Review x = new Review(message, product, this, stars);
-                _reviews.Add(x);
-                product.Reviews.Add(x);
+                ReviewValidator reviewValidator = new ReviewValidator();
+                ValidationResult validationResult = reviewValidator.Validate(x);
+                if (validationResult.IsValid)
+                {
+                    _reviews.Add(x);
+                    product.Reviews.Add(x);
+                }
+                else
+                {
+                    foreach(var error in validationResult.Errors)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine(error);
+                        
+                    }
+                    throw new Exception();
+                }
             }
             else
             {

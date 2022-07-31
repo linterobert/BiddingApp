@@ -10,11 +10,11 @@ namespace BiddingApp.Validations
 {
     internal class ReviewValidator : AbstractValidator<Review>
     {
-        ReviewValidator()
+        public ReviewValidator()
         {
             RuleFor(review => review.Client).NotNull();
             RuleFor(review => review.Text).NotEmpty().NotNull();
-            RuleFor(review => review.StarNumber).InclusiveBetween(0, 5);
+            RuleFor(review => review.StarNumber).InclusiveBetween(1, 5);
             RuleFor(review => review.Product).NotEmpty().NotNull();
         }
     }
