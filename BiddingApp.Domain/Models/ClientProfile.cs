@@ -6,20 +6,25 @@ using System.Threading.Tasks;
 
 namespace BiddingApp.Models
 {//fluentvalidation
-    internal sealed class ClientProfile : ICloneable
+    public sealed class ClientProfile
     {
+        public int ClientProfileId { get; set; }
         public List<Product> ProductsOwn { get; set; }
         public double Balance { get; set; }
-        List<Card> _cards;
+        public List<Card> Cards { get; set; }
         public string ClientName { get; set; }
-        List<Review> _reviews;
-        public ClientProfile(string client)
+        public List<Review> Reviews { get; set; }
+        public ClientProfile()
+        {
+
+        }
+        public ClientProfile(string clientName)
         {
             Balance = 0.00;
             ProductsOwn = new List<Product>();
-            _cards = new List<Card>();
-            ClientName = client;
-            _reviews = new List<Review>();
+            Cards = new List<Card>();
+            ClientName = clientName;
+            Reviews = new List<Review>();
         }
         public override string ToString()
         {
@@ -27,30 +32,15 @@ namespace BiddingApp.Models
             toReturn += $"Client Name: {ClientName}\n";
             toReturn += $"Balance: {Balance}\n";
             toReturn += "Client cards: \n";
-            for (int i = 0; i < _cards.Count; i++)
-            {
-                toReturn += $"\nCard no {i + 1}:\n";
-                toReturn += _cards[i].ToString();
-            }
-            toReturn += "Client's products:\n";
-            for (int i = 0; i < ProductsOwn.Count; i++)
-            {
-                toReturn += $"\nProduct no {i+1}:\n";
-                toReturn += ProductsOwn[i].ToString();
-            }
-            toReturn += "Client's reviews:\n";
-            for (int i = 0; i < _reviews.Count; i++)
-            {
-                toReturn += $"\nReview no {i + 1}:\n";
-                toReturn += _reviews[i].ToString();
-            }
             return toReturn;
         }
+
+        /*
         public void AddCard(Card newCard)
         {
             if (newCard.Owner.Equals(ClientName) && newCard.ExpireDate.CompareTo(DateTime.Now) > 0)
             {
-                _cards.Add(newCard);
+                Cards.Add(newCard);
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("Card added successfully");
                 Console.ForegroundColor = ConsoleColor.White;
@@ -71,7 +61,7 @@ namespace BiddingApp.Models
         }
         public void AddMoney(Card card, double sum)
         {
-            if( this._cards.Contains(card) )
+            if( this.Cards.Contains(card) )
             {
                 Console.ForegroundColor = ConsoleColor.DarkGreen;
                 Balance += sum;
@@ -124,7 +114,7 @@ namespace BiddingApp.Models
         }
         public void RemoveCard(Card newCard)
         {
-            _cards.Remove(newCard);
+            Cards.Remove(newCard);
         }
         public void MakeReport(Product product)
         {
@@ -160,11 +150,13 @@ namespace BiddingApp.Models
         }
         public Card FindCard(Card card)
         {
-            return _cards.Find( c => c.CardNumber == card.CardNumber && c.Pin == card.Pin && c.CVC == card.CVC && c.ExpireDate == card.ExpireDate );
+            return Cards.Find( c => c.CardNumber == card.CardNumber && c.Pin == card.Pin && c.CVC == card.CVC && c.ExpireDate == card.ExpireDate );
         }
         public Card FindCardByCardNumber(string card)
         {
-            return _cards.Find(c => c.CardNumber == card);
+            return Cards.Find(c => c.CardNumber == card);
         }
+        */
     }
+        
 }

@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace BiddingApp.Models
 {
-    internal class AdminProfile : ICloneable
+    public class AdminProfile
     {
         internal protected static List<Tuple<ClientProfile, Product>> _unresolvedReports = new List<Tuple<ClientProfile, Product>>();
         internal protected static List<Tuple<ClientProfile, Product>> _resolvedReports = new List<Tuple<ClientProfile, Product>>();
         public AdminProfile() { }
-        
+        /*
         public void ResolveReport(ClientProfile client, Product product, bool result)
         {
             if (result != false)
@@ -26,5 +26,6 @@ namespace BiddingApp.Models
         {
             return this.MemberwiseClone();
         }
+        */
     }
 }

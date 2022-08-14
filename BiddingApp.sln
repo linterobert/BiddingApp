@@ -3,9 +3,18 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32630.192
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BiddingApp.Domain", "BiddingApp.Domain\BiddingApp.Domain.csproj", "{B2569F2C-0A77-4327-9D93-A04891BA3F2B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BiddingApp.Domain", "BiddingApp.Domain\BiddingApp.Domain.csproj", "{B2569F2C-0A77-4327-9D93-A04891BA3F2B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BiddinApp.Console", "BiddinApp.Console\BiddinApp.Console.csproj", "{016A0BE3-E4ED-4008-A673-A73BE02C1CD7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BiddingApp.Aplication", "BiddingApp.Aplication\BiddingApp.Aplication.csproj", "{0DA6EFCC-2EA3-4AE5-B5D2-72D354292223}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BiddingApp.Infrastructure", "BiddingApp.Infrastructure\BiddingApp.Infrastructure.csproj", "{4F46B993-FBAA-4F74-9547-6D197B132D22}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BiddingApp.API", "BiddingApp.API\BiddingApp.API.csproj", "{7FB82062-5E7F-421B-A3CE-82B74D4D12A5}"
+	ProjectSection(ProjectDependencies) = postProject
+		{0DA6EFCC-2EA3-4AE5-B5D2-72D354292223} = {0DA6EFCC-2EA3-4AE5-B5D2-72D354292223}
+		{4F46B993-FBAA-4F74-9547-6D197B132D22} = {4F46B993-FBAA-4F74-9547-6D197B132D22}
+		{B2569F2C-0A77-4327-9D93-A04891BA3F2B} = {B2569F2C-0A77-4327-9D93-A04891BA3F2B}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +26,18 @@ Global
 		{B2569F2C-0A77-4327-9D93-A04891BA3F2B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B2569F2C-0A77-4327-9D93-A04891BA3F2B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B2569F2C-0A77-4327-9D93-A04891BA3F2B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{016A0BE3-E4ED-4008-A673-A73BE02C1CD7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{016A0BE3-E4ED-4008-A673-A73BE02C1CD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{016A0BE3-E4ED-4008-A673-A73BE02C1CD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{016A0BE3-E4ED-4008-A673-A73BE02C1CD7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0DA6EFCC-2EA3-4AE5-B5D2-72D354292223}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0DA6EFCC-2EA3-4AE5-B5D2-72D354292223}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0DA6EFCC-2EA3-4AE5-B5D2-72D354292223}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0DA6EFCC-2EA3-4AE5-B5D2-72D354292223}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4F46B993-FBAA-4F74-9547-6D197B132D22}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4F46B993-FBAA-4F74-9547-6D197B132D22}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4F46B993-FBAA-4F74-9547-6D197B132D22}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4F46B993-FBAA-4F74-9547-6D197B132D22}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7FB82062-5E7F-421B-A3CE-82B74D4D12A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7FB82062-5E7F-421B-A3CE-82B74D4D12A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7FB82062-5E7F-421B-A3CE-82B74D4D12A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7FB82062-5E7F-421B-A3CE-82B74D4D12A5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace BiddingApp.Validations
 {
-    internal class CompanyProfileValidator : AbstractValidator<CompanyProfile>
+    public class CompanyProfileValidator : AbstractValidator<CompanyProfile>
     {
-        CompanyProfileValidator()
+        public CompanyProfileValidator()
         {
             RuleFor(company => company.CompanyBalance).Must(x => x >= 0);
             RuleFor(company => company.StrikeNumber).InclusiveBetween(0, 3);

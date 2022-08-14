@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BiddingApp.Domain.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,43 +7,50 @@ using System.Threading.Tasks;
 
 namespace BiddingApp.Models
 {//companyprofile
-    internal sealed class CompanyProfile : ICloneable
+    public sealed class CompanyProfile
     {
-        string _companyName;
-        string _IBAN;
-        double _companyBalance;
-        List<Product> _products;
-
-
+        public List<Product> Products { get; set; }
+        public int CompanyProfileId { get; set; }
+        public string CompanyName { get; set; }
+        public String IBAN { get; set; }
+        public double CompanyBalance { get; set; }
         public int StrikeNumber { get; set; }
+        public CompanyProfile()
+        {
+
+        }
         public CompanyProfile(string companyName, string iBAN)
         {
-            _companyName = companyName;
-            _IBAN = iBAN;
-            _products = new List<Product>();
+            CompanyName = companyName;
+            IBAN = iBAN;
+            Products = new List<Product>();
             StrikeNumber = 0;
-            _companyBalance = 0;
+            CompanyBalance = 0;
         }
+
         public override string ToString()
         {
             string toReturn = "";
             toReturn += $"Company name: {CompanyName};\n";
-            toReturn += $"IBAN: {_IBAN};\n";
-            toReturn += $"Balance: {_companyBalance};\n";
-            for (int i = 0; i < _products.Count; i++)
+            toReturn += $"IBAN: {IBAN};\n";
+            toReturn += $"Balance: {CompanyBalance};\n";
+            for (int i = 0; i < Products.Count; i++)
             {
                 toReturn += $"\nProduct no {i + 1}:\n";
-                toReturn += _products[i].ToString();
+                toReturn += Products[i].ToString();
             }
             return toReturn;
         }
-        public string CompanyName { get { return _companyName; } }
-        public String IBAN { get { return _IBAN; } set { _IBAN = value; } }
-        public double CompanyBalance { get { return _companyBalance; } set { _companyBalance = value; } }
+
+        /*
         public void AddProduct(Product product)
         {
-            if (StrikeNumber < 3) this._products.Add(product);
-            else Console.WriteLine("Your account was banned!");
+            if (StrikeNumber < 3) this._productsID.Add(product.ProductId);
+            else
+            {
+                var exception = new ModelException("Your account was banned!");
+                throw exception;
+            }
         }
         public void CashOut(Product product)
         {
@@ -58,17 +66,20 @@ namespace BiddingApp.Models
                 {
                     if (!this._products.Contains(product))
                     {
-                        Console.WriteLine("You don't have this product!");
+                        var exception = new ModelException("You don't have this product!");
+                        throw exception;
                     }
                     else
                     {
                         if (!(product.FinalTime.CompareTo(DateTime.Now) < 0))
                         {
-                            Console.WriteLine("This item is still in time!");
+                            var exception = new ModelException("This item is still in time!");
+                            throw exception;
                         }
                         else
                         {
-                            Console.WriteLine("You already take the money from this product");
+                            var exception = new ModelException("You already take the money from this product!");
+                            throw exception;
                         }
                     }
                 }
@@ -80,6 +91,6 @@ namespace BiddingApp.Models
             return this.MemberwiseClone();
         }
 
-
+        */
     }
 }

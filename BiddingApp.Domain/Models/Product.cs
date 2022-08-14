@@ -1,35 +1,49 @@
-﻿using System;
+﻿using BiddingApp.Domain.Models;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace BiddingApp.Models
 {
-    internal class Product : ICloneable, IEquatable<Product>
+    public class Product
     {
+        [Key]
+        public int ProductId { get; set; }
         public string ProductName { get; set; }
         double _startPrice;
         public double ActualPrice { get; set; }
-        DateTime _postTime;
         public DateTime FinalTime { get; set; }
         //TimeSpan
-        public CompanyProfile company { get; set; }
-        public ClientProfile Owner { get; set; }
+        public int CompanyProfileId { get; set; }
+
+        public int? ClientProfileId { get; set; }
         public bool CashOut { get; set; }
         public List<Review> Reviews { get; set; }
-        static double BitConstant = 0.1;
-        public Product(string productName, double price,DateTime finalTime, CompanyProfile company1)
+        public List<ProductImage> Images {get;set;}
+
+        public static double BitConstant = 0.1;
+
+        //title
+        //description
+        //url
+        //id
+        public Product()
+        {
+
+        }
+        public Product(string productName, double price,DateTime finalTime)
         {
             ProductName = productName;
             _startPrice = price;
-            _postTime = DateTime.Now;
             FinalTime = finalTime;
-            company = company1;
-            Owner = null;
             ActualPrice = price;
             CashOut = false;
             Reviews = new List<Review>();
+            Images = new List<ProductImage>();
         }
         public override string ToString()
         {
@@ -37,32 +51,15 @@ namespace BiddingApp.Models
             toReturn += $"Product name: {ProductName};\n";
             toReturn += $"Starting price: {_startPrice}$;\n";
             toReturn += $"Actual price: {ActualPrice}$;\n";
-            toReturn += $"Posting time: {_postTime};\n";
             toReturn += $"Final time: {FinalTime};\n";
-            if (Owner != null)
-            {
-                toReturn += $"Actual owner: {Owner.ClientName};\n";
-            }
-            toReturn += $"Company: {company.CompanyName};\n";
-            toReturn += $"Reviews: \n";
-            
-            for (int i = 0; i < Reviews.Count; i += 1)
-            {
-                toReturn += "\n";
-                toReturn += $"Review no {i + 1}: \n";
-                toReturn += Reviews[i].ToString();
-            }
             return toReturn;
         }
         public double StartPrice { get { return _startPrice; } set { _startPrice = value; } }
-        public bool CheckAvailable()
-        {
-            if (FinalTime.CompareTo(_postTime) > 0) return true;
-            else return false;
-        }
+
+        /*
         public void MakeOffer(ClientProfile client, double offer)
         {
-            if (this.Owner != null)
+            if (this.OwnerID != -1)
             {
                 Owner.Balance += this.ActualPrice;
                 Owner.ProductsOwn.Remove(this);
@@ -90,6 +87,7 @@ namespace BiddingApp.Models
                 this.ActualPrice.Equals(other.ActualPrice) &&
                 this.FinalTime.Equals(other.FinalTime) &&
                 this.CashOut.Equals(other.CashOut);
-        }
+        
+        */
     }
 }

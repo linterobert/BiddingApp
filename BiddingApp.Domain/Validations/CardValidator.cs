@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace BiddingApp.Validations
 {
-    internal class CardValidator : AbstractValidator<Card>
+    public class CardValidator : AbstractValidator<Card>
     {
         public CardValidator()
         {

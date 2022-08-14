@@ -6,33 +6,32 @@ using System.Threading.Tasks;
 
 namespace BiddingApp.Models
 {
-    internal class Review
+    public class Review
     {
+        public int ReviewID { get; set; }
         string _text;
-        Product _product;
-        ClientProfile _client;
+        public int ProductId { get; set; }
+        public int ClientId { get; set; }
         int _starNumber;
-        DateTime _postTime;
+        public DateTime PostTime { get; set; }
+        public Review()
+        {
+
+        }
         public Review(string text, Product product, ClientProfile client, int starNumber)
         {
             _text = text;
-            _product = product;
-            _client = client;
             _starNumber = starNumber;
-            _postTime = DateTime.Now;
+            PostTime = DateTime.Now;
         }
 
-        public Product Product { get { return _product; } }
         public String Text { get { return _text; } set { _text = value; } }
-        public ClientProfile Client { get { return _client; } }
         public int StarNumber { get { return _starNumber; } set { _starNumber = value; } }
         public override string ToString()
         {
             string toReturn = "";
-            toReturn += $"Client: {_client.ClientName};\n";
-            toReturn += $"Product: {_product.ProductName};\n";
             toReturn += $"Stars : {_starNumber};\n";
-            toReturn += $"Post Time: {_postTime};\n";
+            toReturn += $"Post Time: {PostTime};\n";
             toReturn += $"Text: {_text};\n";
             return toReturn;
         }

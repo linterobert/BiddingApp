@@ -1,6 +1,7 @@
-﻿using BiddingApp.Models;
+﻿using FluentValidation.Results;
+using BiddingApp.Models;
 using BiddingApp.Validations;
-using FluentValidation.Results;
+/*
 //CardValidator cardValidator = new CardValidator();
 
 ValidationResult validator = new ValidationResult();
@@ -584,3 +585,6 @@ while (ok)
             Console.ForegroundColor = ConsoleColor.White;
         }
 }
+*/
+
+//mediator notify
