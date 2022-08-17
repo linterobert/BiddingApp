@@ -2,7 +2,7 @@
 using BiddingApp.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace BiddingApp.API.Data
+namespace BiddingApp.Infrastructure.Data
 {
     public class BiddingAppContext : DbContext
     {

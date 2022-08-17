@@ -1,18 +1,20 @@
-﻿using BiddingApp.API.Data;
-using BiddingApp.Aplication;
+﻿using BiddingApp.Aplication;
+using BiddingApp.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
-namespace BiddingApp.API.Repositories
+namespace BiddingApp.Infrastructure.Repositories
 {
     public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEntity : class
         {
             protected readonly BiddingAppContext _context;
-            public GenericRepository(BiddingAppContext context)
+        private BiddingAppContext context;
+
+        public GenericRepository(BiddingAppContext context)
             {
                 _context = context;
             }
 
-            public void Create(TEntity entity)
+        public void Create(TEntity entity)
             {
                 _context.Set<TEntity>().Add(entity);
             }

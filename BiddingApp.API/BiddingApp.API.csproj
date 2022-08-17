@@ -19,6 +19,7 @@
   <ItemGroup>
     <ProjectReference Include="..\BiddingApp.Aplication\BiddingApp.Aplication.csproj" />
     <ProjectReference Include="..\BiddingApp.Domain\BiddingApp.Domain.csproj" />
+    <ProjectReference Include="..\BiddingApp.Infrastructure\BiddingApp.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

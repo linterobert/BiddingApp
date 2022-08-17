@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace BiddingApp.API.Migrations
+namespace BiddingApp.Infrastructure.Migrations
 {
-    public partial class initialMigration : Migration
+    public partial class Infrastructure : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -16,7 +16,8 @@ namespace BiddingApp.API.Migrations
                     ClientProfileId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Balance = table.Column<double>(type: "float", nullable: false),
-                    ClientName = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    ClientName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ProfilePhotoURL = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -29,10 +30,11 @@ namespace BiddingApp.API.Migrations
                 {
                     CompanyProfileId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    StrikeNumber = table.Column<int>(type: "int", nullable: false),
                     CompanyName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     IBAN = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CompanyBalance = table.Column<double>(type: "float", nullable: false)
+                    CompanyBalance = table.Column<double>(type: "float", nullable: false),
+                    StrikeNumber = table.Column<int>(type: "int", nullable: false),
+                    ProfilePhotoURL = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -71,11 +73,10 @@ namespace BiddingApp.API.Migrations
                     ProductName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ActualPrice = table.Column<double>(type: "float", nullable: false),
                     FinalTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CompanyProfileId = table.Column<int>(type: "int", nullable: false),
-                    ClientProfileId = table.Column<int>(type: "int", nullable: false),
                     CashOut = table.Column<bool>(type: "bit", nullable: false),
                     StartPrice = table.Column<double>(type: "float", nullable: false),
-                    CompanyProfileId1 = table.Column<int>(type: "int", nullable: true)
+                    CompanyProfileId = table.Column<int>(type: "int", nullable: false),
+                    ClientProfileId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -84,19 +85,13 @@ namespace BiddingApp.API.Migrations
                         name: "FK_Products_ClientProfiles_ClientProfileId",
                         column: x => x.ClientProfileId,
                         principalTable: "ClientProfiles",
-                        principalColumn: "ClientProfileId",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "ClientProfileId");
                     table.ForeignKey(
                         name: "FK_Products_CompanyProfiles_CompanyProfileId",
                         column: x => x.CompanyProfileId,
                         principalTable: "CompanyProfiles",
                         principalColumn: "CompanyProfileId",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Products_CompanyProfiles_CompanyProfileId1",
-                        column: x => x.CompanyProfileId1,
-                        principalTable: "CompanyProfiles",
-                        principalColumn: "CompanyProfileId");
                 });
 
             migrationBuilder.CreateTable(
@@ -127,10 +122,11 @@ namespace BiddingApp.API.Migrations
                 {
                     ReviewID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    Text = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ProductId = table.Column<int>(type: "int", nullable: false),
                     ClientId = table.Column<int>(type: "int", nullable: false),
-                    Text = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    StarNumber = table.Column<int>(type: "int", nullable: false)
+                    StarNumber = table.Column<int>(type: "int", nullable: false),
+                    PostTime = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -167,11 +163,6 @@ namespace BiddingApp.API.Migrations
                 name: "IX_Products_CompanyProfileId",
                 table: "Products",
                 column: "CompanyProfileId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Products_CompanyProfileId1",
-                table: "Products",
-                column: "CompanyProfileId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Reviews_ClientId",

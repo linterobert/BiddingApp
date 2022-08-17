@@ -9,10 +9,10 @@ namespace BiddingApp.Models
     public class Review
     {
         public int ReviewID { get; set; }
-        string _text;
+        public string Text { get; set; }
         public int ProductId { get; set; }
         public int ClientId { get; set; }
-        int _starNumber;
+        public int StarNumber { get; set; }
         public DateTime PostTime { get; set; }
         public Review()
         {
@@ -20,19 +20,16 @@ namespace BiddingApp.Models
         }
         public Review(string text, Product product, ClientProfile client, int starNumber)
         {
-            _text = text;
-            _starNumber = starNumber;
+            Text = text;
+            StarNumber = starNumber;
             PostTime = DateTime.Now;
         }
-
-        public String Text { get { return _text; } set { _text = value; } }
-        public int StarNumber { get { return _starNumber; } set { _starNumber = value; } }
         public override string ToString()
         {
             string toReturn = "";
-            toReturn += $"Stars : {_starNumber};\n";
+            toReturn += $"Stars : {StarNumber};\n";
             toReturn += $"Post Time: {PostTime};\n";
-            toReturn += $"Text: {_text};\n";
+            toReturn += $"Text: {Text};\n";
             return toReturn;
         }
 

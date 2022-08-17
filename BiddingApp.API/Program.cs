@@ -1,6 +1,6 @@
-using BiddingApp.API.Data;
-using BiddingApp.API.Repositories;
 using BiddingApp.Aplication;
+using BiddingApp.Infrastructure.Data;
+using BiddingApp.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,6 +18,7 @@ builder.Services.AddTransient<ICompanyProfileRepository, CompanyProfileRepositor
 builder.Services.AddTransient<IProductRepository, ProductRepository>();
 builder.Services.AddTransient<ICardRepository, CardRepository>();
 builder.Services.AddTransient<IReviewRepository, ReviewRepository>();
+builder.Services.AddTransient<IProductImageRepository, ProductImageRepository>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

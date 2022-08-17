@@ -1,9 +1,9 @@
-﻿using BiddingApp.API.Data;
-using BiddingApp.Aplication;
+﻿using BiddingApp.Aplication;
+using BiddingApp.Infrastructure.Data;
 using BiddingApp.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace BiddingApp.API.Repositories
+namespace BiddingApp.Infrastructure.Repositories
 {
     public class CompanyProfileRepository : GenericRepository<CompanyProfile>, ICompanyProfileRepository
     {

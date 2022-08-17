@@ -1,5 +1,4 @@
-﻿using BiddingApp.API.Repositories;
-using BiddingApp.Aplication;
+﻿using BiddingApp.Aplication;
 using BiddingApp.Domain.DTOs;
 using BiddingApp.Models;
 using Microsoft.AspNetCore.Mvc;

@@ -81,10 +81,10 @@ namespace BiddingApp.API.Controllers
             return Ok(new ClientProfileDTO(_repository.GetByIdAsync(id).Result));
         }
 
-        [HttpPut("{id}/funds/{CardNumber}")]
-        public async Task<IActionResult> UpdateClientName(int id, double sum, string CardNumber, string CVC, string Pin)
+        [HttpPut("{id}/funds/{cardNumber}")]
+        public async Task<IActionResult> UpdateClientName(int id, double sum, string cardNumber, string CVC, string Pin)
         {
-            var card = _cardRepository.GetCardByCardNumber(CardNumber);
+            var card = _cardRepository.GetCardByCardNumber(cardNumber);
             if (card != null)
             {
                 if (card.ExpireDate.CompareTo(DateTime.Now) >= 0 && card.Pin == Pin && card.CVC == CVC)

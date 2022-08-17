@@ -1,9 +1,8 @@
-﻿using BiddingApp.API.Data;
-using BiddingApp.Aplication;
+﻿using BiddingApp.Aplication;
+using BiddingApp.Infrastructure.Data;
 using BiddingApp.Models;
-using Microsoft.AspNetCore.Mvc;
 
-namespace BiddingApp.API.Repositories
+namespace BiddingApp.Infrastructure.Repositories
 {
     public class ReviewRepository : GenericRepository<Review>, IReviewRepository
     {
