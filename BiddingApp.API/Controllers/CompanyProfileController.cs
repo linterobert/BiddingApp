@@ -36,6 +36,7 @@ namespace BiddingApp.API.Controllers
             CompanyProfile company = new CompanyProfile();
             company.CompanyName = dto.CompanyName;
             company.IBAN = dto.IBAN;
+            company.ProfilePhotoURL = "default";
 
             _repository.Create(company);
 

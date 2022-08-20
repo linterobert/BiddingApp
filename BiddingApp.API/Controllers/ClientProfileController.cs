@@ -42,6 +42,7 @@ namespace BiddingApp.API.Controllers
             client.Cards = new List<Card>();
             client.ProductsOwn = new List<Product>();
             client.Reviews = new List<Review>();
+            client.ProfilePhotoURL = "default";
 
             _repository.Create(client);
 

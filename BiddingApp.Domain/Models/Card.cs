@@ -10,6 +10,7 @@ namespace BiddingApp.Models
     {
         public int Id { get; set; }
         public int ClientProfileId { get; set; }
+        public ClientProfile Client { get; set; }
         public string CardNumber { get; set; }
         public string CVC { get; set; }
         public string Pin { get; set; }

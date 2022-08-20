@@ -11,7 +11,9 @@ namespace BiddingApp.Models
         public int ReviewID { get; set; }
         public string Text { get; set; }
         public int ProductId { get; set; }
+        public Product Product { get; set; }
         public int ClientId { get; set; }
+        public ClientProfile ClientProfile { get; set; }
         public int StarNumber { get; set; }
         public DateTime PostTime { get; set; }
         public Review()

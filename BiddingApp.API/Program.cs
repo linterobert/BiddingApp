@@ -13,6 +13,9 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<BiddingAppContext>(option => option.UseSqlServer(@"Data Source=(localdb)\local;Initial Catalog=BiddingApp.Database;Integrated Security=True"));
+builder.Services.AddControllersWithViews().AddNewtonsoftJson(options =>
+    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+);
 builder.Services.AddTransient<IClientProfileRepository, ClientProfileRepository>();
 builder.Services.AddTransient<ICompanyProfileRepository, CompanyProfileRepository>();
 builder.Services.AddTransient<IProductRepository, ProductRepository>();

@@ -1,4 +1,5 @@
 ﻿using BiddingApp.Domain.Models;
+using BiddingApp.Infrastructure.Configurations;
 using BiddingApp.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,27 +21,11 @@ namespace BiddingApp.Infrastructure.Data
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-
-            modelBuilder.Entity<Product>()
-                .HasMany(product => product.Images)
-                .WithOne();
-            modelBuilder.Entity<CompanyProfile>()
-                .HasMany(product => product.Products)
-                .WithOne()
-                .HasForeignKey(x => x.CompanyProfileId);
-            modelBuilder.Entity<Product>()
-                .HasMany(product => product.Reviews)
-                .WithOne();
-            modelBuilder.Entity<ClientProfile>()
-                .HasMany(client => client.Cards)
-                .WithOne()
-                .HasForeignKey(x => x.ClientProfileId);
-            modelBuilder.Entity<ClientProfile>()
-                .HasMany(client => client.Reviews)
-                .WithOne()
-                .HasForeignKey(x => x.ClientId)
-                .OnDelete(DeleteBehavior.NoAction);
-
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.ApplyConfiguration(new CardConfiguration());
+            modelBuilder.ApplyConfiguration(new ProductConfiguration());
+            modelBuilder.ApplyConfiguration(new ProductImageConfiguration());
+            modelBuilder.ApplyConfiguration(new ReviewConfiguration());
         }
     }
 }

@@ -21,8 +21,10 @@ namespace BiddingApp.Models
         public List<ProductImage> Images {get;set;}
         public double StartPrice { get; set; }
         public int CompanyProfileId { get; set; }
+        public CompanyProfile CompanyProfile { get; set; }
 
         public int? ClientProfileId { get; set; }
+        public ClientProfile ClientProfile { get; set; }
 
         public static double BitConstant = 0.1;
 
