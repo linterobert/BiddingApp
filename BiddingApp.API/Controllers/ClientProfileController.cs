@@ -105,7 +105,7 @@ namespace BiddingApp.API.Controllers
 
             if (client == null)
             {
-                return NotFound("Produsul nu exista!");
+                return NotFound("Clientul nu exista!");
             }
 
             _repository.Delete(client);
