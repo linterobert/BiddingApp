@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BiddingApp.Domain.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,6 +16,7 @@ namespace BiddingApp.Models
         public string ClientName { get; set; }
         public List<Review> Reviews { get; set; }
         public string ProfilePhotoURL { get; set; }
+        public List<ClientNotification> Notifications { get; set; }
         public ClientProfile()
         {
 

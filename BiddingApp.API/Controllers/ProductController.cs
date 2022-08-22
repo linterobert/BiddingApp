@@ -13,11 +13,13 @@ namespace BiddingApp.API.Controllers
     {
         private readonly IProductRepository _repository;
         private readonly IClientProfileRepository _profileRepository;
+        private readonly IClientNotificationRepository _clientNotificationRepository;
 
-        public ProductController(IProductRepository repository, IClientProfileRepository profileRepository)
+        public ProductController(IProductRepository repository, IClientProfileRepository profileRepository, IClientNotificationRepository clientNotificationRepository)
         {
             _repository = repository;
             _profileRepository = profileRepository;
+            _clientNotificationRepository = clientNotificationRepository;
         }
 
         [HttpGet]
@@ -68,7 +70,6 @@ namespace BiddingApp.API.Controllers
                 && product.FinalTime.CompareTo(DateTime.Now) >= 0 
                 && client.Balance >= sum)
             {
-                Console.WriteLine("DA");
                 product.ActualPrice = Math.Round(sum * (1 + Product.BitConstant),2);
                 product.ClientProfileId = clientId;
                 _repository.Update(product);

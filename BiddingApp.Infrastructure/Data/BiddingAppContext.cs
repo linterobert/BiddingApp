@@ -13,6 +13,8 @@ namespace BiddingApp.Infrastructure.Data
         public DbSet<Product> Products { get; set; }
         public DbSet<Card> Cards { get; set; }
         public DbSet<Review> Reviews { get; set; }
+        public DbSet<ClientNotification> ClientNotifications { get; set; }
+        public DbSet<CompanyNotification> CompanyNotifications { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionBuilder)
         {
@@ -26,6 +28,8 @@ namespace BiddingApp.Infrastructure.Data
             modelBuilder.ApplyConfiguration(new ProductConfiguration());
             modelBuilder.ApplyConfiguration(new ProductImageConfiguration());
             modelBuilder.ApplyConfiguration(new ReviewConfiguration());
+            modelBuilder.ApplyConfiguration(new ClientNotificationConfiguration());
+            modelBuilder.ApplyConfiguration(new CompanyNotificationConfiguration());
         }
     }
 }

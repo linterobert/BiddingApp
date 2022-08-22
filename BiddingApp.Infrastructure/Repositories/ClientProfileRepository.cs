@@ -29,7 +29,6 @@ namespace BiddingApp.Infrastructure.Repositories
             client.Balance += sum;
             Update(client);
         }
-
         public void UpdateClientName(int id, string newName)
         {
             ClientProfile client = GetByIdAsync(id).Result;

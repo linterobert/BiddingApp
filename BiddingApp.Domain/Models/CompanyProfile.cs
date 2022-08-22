@@ -16,6 +16,7 @@ namespace BiddingApp.Models
         public double CompanyBalance { get; set; }
         public int StrikeNumber { get; set; }
         public string ProfilePhotoURL { get; set; }
+        public List<CompanyNotification> Notifications { get; set; }
         public CompanyProfile()
         {
 
