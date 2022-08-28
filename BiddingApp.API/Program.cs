@@ -1,6 +1,9 @@
 using BiddingApp.Aplication;
+using BiddingApp.Aplication.Commands;
+using BiddingApp.Infrastructure;
 using BiddingApp.Infrastructure.Data;
 using BiddingApp.Infrastructure.Repositories;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,12 +19,17 @@ builder.Services.AddDbContext<BiddingAppContext>(option => option.UseSqlServer(@
 builder.Services.AddControllersWithViews().AddNewtonsoftJson(options =>
     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
 );
-builder.Services.AddTransient<IClientProfileRepository, ClientProfileRepository>();
-builder.Services.AddTransient<ICompanyProfileRepository, CompanyProfileRepository>();
-builder.Services.AddTransient<IProductRepository, ProductRepository>();
-builder.Services.AddTransient<ICardRepository, CardRepository>();
-builder.Services.AddTransient<IReviewRepository, ReviewRepository>();
-builder.Services.AddTransient<IProductImageRepository, ProductImageRepository>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<IClientProfileRepository, ClientProfileRepository>();
+builder.Services.AddScoped<ICompanyProfileRepository, CompanyProfileRepository>();
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<ICardRepository, CardRepository>();
+builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
+builder.Services.AddScoped<IProductImageRepository, ProductImageRepository>();
+builder.Services.AddScoped<IClientNotificationRepository, ClientNotificationRepository>();
+builder.Services.AddMediatR(typeof(CreateClientProfileCommand));
+builder.Services.AddAutoMapper(typeof(Program));
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

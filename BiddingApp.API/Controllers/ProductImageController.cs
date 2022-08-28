@@ -1,5 +1,9 @@
-﻿using BiddingApp.Aplication;
+﻿using AutoMapper;
+using BiddingApp.Aplication;
+using BiddingApp.Aplication.Commands;
+using BiddingApp.Aplication.Queries;
 using BiddingApp.Domain.DTOs;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BiddingApp.API.Controllers
@@ -8,52 +12,42 @@ namespace BiddingApp.API.Controllers
     [ApiController]
     public class ProductImageController : ControllerBase
     {
-        private readonly IProductImageRepository _repository;
+        private readonly IMediator _mediator;
+        private readonly IMapper _mapper;
 
-        public ProductImageController(IProductImageRepository repository)
+        public ProductImageController(IMediator mediator, IMapper mapper)
         {
-            _repository = repository;
+            _mediator = mediator;
+            _mapper = mapper;
         }
-
-        [HttpGet]
-        public async Task<IActionResult> GetImages()
+        [HttpPost]
+        public async Task<IActionResult> PostProductImage(CreateProductImageDTO dto)
         {
-            var products = _repository.GetAll();
-            var productsToReturn = new List<ProductImageDTO>();
-
-            foreach (var product in products)
+            var command = new CreateProductImageCommand
             {
-                productsToReturn.Add(new ProductImageDTO(product));
-            }
-            return Ok(productsToReturn);
+                Title = dto.Title,
+                Description = dto.Description,
+                URL = dto.URL,
+                ProductId = dto.ProductId
+            };
+            var result = await _mediator.Send(command);
+            var toReturn = _mapper.Map<ProductImageDTO>(result);
+            return Ok(toReturn);
         }
         [HttpGet("{id}")]
         public async Task<IActionResult> GetImageById(int id)
         {
-            var product = _repository.GetByIdAsync(id).Result;
-            if (product == null)
+            var query = new GetImageByIDQuery
             {
-                return NotFound("Card-ul nu exista!");
+                ImageID = id
+            };
+            var result = await _mediator.Send(query);
+            if (result == null)
+            {
+                return NotFound("Image not found!");
             }
-            return Ok(new ProductImageDTO(product));
+            var toReturn = _mapper.Map<ProductImageDTO>(result);
+            return Ok(toReturn);
         }
-        /*
-        [HttpPost]
-        public async Task<IActionResult> CreateProduct(CreateProductDTO dto)
-        {
-            Product product = new Product();
-            product.ProductName = dto.ProductName;
-            product.CompanyProfileId = dto.CompanyId;
-            product.ActualPrice = dto.StartPrice;
-            product.CashOut = false;
-            product.FinalTime = dto.FinalTime;
-            product.StartPrice = dto.StartPrice;
-
-            _repository.Create(product);
-
-            await _repository.SaveAsync();
-            return Ok(new ProductDTO(product));
-        }
-        */
     }
 }

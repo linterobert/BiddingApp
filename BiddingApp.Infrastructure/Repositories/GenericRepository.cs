@@ -7,21 +7,20 @@ namespace BiddingApp.Infrastructure.Repositories
     public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEntity : class
         {
             protected readonly BiddingAppContext _context;
-        private BiddingAppContext context;
 
         public GenericRepository(BiddingAppContext context)
             {
                 _context = context;
             }
 
-        public void Create(TEntity entity)
-            {
-                _context.Set<TEntity>().Add(entity);
-            }
+        public async Task Create(TEntity entity)
+        {
+            await _context.Set<TEntity>().AddAsync(entity);
+        }
 
-            public void CreateRange(IEnumerable<TEntity> entities)
+            public async Task CreateRange(IEnumerable<TEntity> entities)
             {
-                _context.Set<TEntity>().AddRange(entities);
+                await _context.Set<TEntity>().AddRangeAsync(entities);
             }
 
             public void Delete(TEntity entity)
@@ -34,9 +33,9 @@ namespace BiddingApp.Infrastructure.Repositories
                 _context.Set<TEntity>().RemoveRange(entities);
             }
 
-            public IQueryable<TEntity> GetAll()
+            public async Task<List<TEntity>> GetAll()
             {
-                return _context.Set<TEntity>().AsNoTracking();
+                return await _context.Set<TEntity>().ToListAsync();
             }
 
             public async Task<TEntity> GetByIdAsync(int id)
@@ -49,7 +48,7 @@ namespace BiddingApp.Infrastructure.Repositories
                 return await _context.SaveChangesAsync() > 0;
             }
 
-            public void Update(TEntity entity)
+            public async Task Update(TEntity entity)
             {
                 _context.Set<TEntity>().Update(entity);
             }

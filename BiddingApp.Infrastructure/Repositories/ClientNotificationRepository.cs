@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace BiddingApp.Infrastructure.Repositories
 {
-    internal class ClientNotificationRepository : GenericRepository<ClientNotification>, IClientNotificationRepository
+    public class ClientNotificationRepository : GenericRepository<ClientNotification>, IClientNotificationRepository
     {
         public ClientNotificationRepository(BiddingAppContext _context) : base(_context) { }
 

@@ -24,6 +24,7 @@ namespace BiddingApp.Infrastructure
             ClientNotificationRepository = clientNotificationRepository;
             ClientProfileRepository = clientProfileRepository;
             ReviewRepository = reviewRepository;
+            CompanyProfileRepository = companyProfileRepository;
 
         }
 

@@ -9,10 +9,10 @@ namespace BiddingApp.Aplication
 {
     public interface IClientProfileRepository : IGenericRepository<ClientProfile>
     {
-        ClientProfile GetClientProfileById(int id);
-        IEnumerable<Product> GetProductsByClient(int id);
-        IEnumerable<Review> GetReviewsByClient(int id);
-        void UpdateBalance(int id, double sum);
-        void UpdateClientName(int id, string newName);
+        Task<ClientProfile> GetClientProfileById(int id);
+        Task<List<Product>> GetProductsByClient(int id);
+        Task<List<Review>> GetReviewsByClient(int id);
+        Task UpdateBalance(int id, double sum);
+        Task UpdateClientName(int id, string newName);
     }
 }

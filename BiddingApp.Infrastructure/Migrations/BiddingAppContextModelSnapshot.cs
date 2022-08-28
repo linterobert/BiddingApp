@@ -54,7 +54,7 @@ namespace BiddingApp.Infrastructure.Migrations
 
                     b.HasIndex("ClientId");
 
-                    b.ToTable("ClientNotification");
+                    b.ToTable("ClientNotifications");
                 });
 
             modelBuilder.Entity("BiddingApp.Domain.Models.CompanyNotification", b =>
@@ -89,7 +89,7 @@ namespace BiddingApp.Infrastructure.Migrations
 
                     b.HasIndex("CompanyId");
 
-                    b.ToTable("CompanyNotification");
+                    b.ToTable("CompanyNotifications");
                 });
 
             modelBuilder.Entity("BiddingApp.Domain.Models.ProductImage", b =>
@@ -225,7 +225,6 @@ namespace BiddingApp.Infrastructure.Migrations
                         .HasColumnType("bit");
 
                     b.Property<int?>("ClientProfileId")
-                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<int>("CompanyProfileId")
@@ -331,8 +330,7 @@ namespace BiddingApp.Infrastructure.Migrations
                 {
                     b.HasOne("BiddingApp.Models.ClientProfile", "ClientProfile")
                         .WithMany("ProductsOwn")
-                        .HasForeignKey("ClientProfileId")
-                        .IsRequired();
+                        .HasForeignKey("ClientProfileId");
 
                     b.HasOne("BiddingApp.Models.CompanyProfile", "CompanyProfile")
                         .WithMany("Products")

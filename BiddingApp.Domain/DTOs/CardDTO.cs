@@ -9,12 +9,16 @@ namespace BiddingApp.Domain.DTOs
 {
     public class CardDTO
     {
+        public int Id { get; set; }
         public string CardNumber { get; set; }
         public string CVC { get; set; }
         public string PIN { get; set; }
         public DateTime ExpireDate { get; set; }
         public int ClientId { get; set; }
+        public CardDTO()
+        {
 
+        }
         public CardDTO(Card dto)
         {
             CardNumber = dto.CardNumber;

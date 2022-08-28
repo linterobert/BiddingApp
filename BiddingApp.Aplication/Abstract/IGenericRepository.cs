@@ -10,17 +10,17 @@ namespace BiddingApp.Aplication
     {
         // Get Data
 
-        IQueryable<TEntity> GetAll();
+        Task<List<TEntity>> GetAll();
         Task<TEntity> GetByIdAsync(int id);
 
         //Create
 
-        void Create(TEntity entity);
-        void CreateRange(IEnumerable<TEntity> entities);
+        Task Create(TEntity entity);
+        Task CreateRange(IEnumerable<TEntity> entities);
 
         //Update
 
-        void Update(TEntity entity);
+        Task Update(TEntity entity);
 
         //Delete
 

@@ -9,6 +9,7 @@ namespace BiddingApp.Aplication
 {
     public interface IProductRepository : IGenericRepository<Product>
     {
+        Task<Product> GetProductByID(int id);
         IEnumerable<Product> GetActiveProducts();
         IEnumerable<Product> GetProducts();
         IEnumerable<Product> GetProductsByPrice(double min, double max);

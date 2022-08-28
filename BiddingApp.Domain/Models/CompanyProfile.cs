@@ -12,7 +12,7 @@ namespace BiddingApp.Models
         public List<Product> Products { get; set; }
         public int CompanyProfileId { get; set; }
         public string CompanyName { get; set; }
-        public String IBAN { get; set; }
+        public string IBAN { get; set; }
         public double CompanyBalance { get; set; }
         public int StrikeNumber { get; set; }
         public string ProfilePhotoURL { get; set; }

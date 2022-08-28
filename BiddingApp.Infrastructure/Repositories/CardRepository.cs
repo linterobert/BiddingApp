@@ -9,9 +9,10 @@ namespace BiddingApp.Infrastructure.Repositories
     {
         public CardRepository(BiddingAppContext _context) : base(_context) { }
 
-        public Card GetCardByCardNumber(string cardNumber)
+        public async Task<Card> GetCardByCardNumber(string cardNumber)
         {
-            return _context.Cards.Where(x => x.CardNumber == cardNumber).FirstOrDefaultAsync().Result;
+            var toReturn = await _context.Cards.Where(x => x.CardNumber == cardNumber).FirstOrDefaultAsync();
+            return toReturn;
         }
     }
 }

@@ -9,6 +9,6 @@ namespace BiddingApp.Aplication
 {
     public interface ICardRepository : IGenericRepository<Card>
     {
-        Card GetCardByCardNumber(string cardNumber);
+        Task<Card> GetCardByCardNumber(string cardNumber);
     }
 }

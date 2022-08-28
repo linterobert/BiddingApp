@@ -1,6 +1,10 @@
-﻿using BiddingApp.Aplication;
+﻿using AutoMapper;
+using BiddingApp.Aplication;
+using BiddingApp.Aplication.Commands;
+using BiddingApp.Aplication.Queries;
 using BiddingApp.Domain.DTOs;
 using BiddingApp.Models;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,85 +14,97 @@ namespace BiddingApp.API.Controllers
     [ApiController]
     public class CompanyProfileController : ControllerBase
     {
-        private readonly ICompanyProfileRepository _repository;
-        public CompanyProfileController(ICompanyProfileRepository repository)
+        private readonly IMediator _mediator;
+        private readonly IMapper _mapper;
+        public CompanyProfileController(IMediator mediator, IMapper mapper)
         {
-            _repository = repository;
+            _mediator = mediator;
+            _mapper = mapper;
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateCompany(CreateCompanyProfileDTO dto)
+        {
+            var command = _mapper.Map<CreateCompanyProfileCommand>(dto);
+            var created = await _mediator.Send(command);
+            return Ok(created);
         }
 
         [HttpGet]
         public async Task<IActionResult> GetCompanyProfiles()
         {
-            var companies = _repository.GetAll();
-            var companiesToReturn = new List<CompanyProfileDTO>();
-
-            foreach (var company in companies)
-            {
-                companiesToReturn.Add(new CompanyProfileDTO(company));
-            }
-            return Ok(companiesToReturn);
-        }
-
-        [HttpPost]
-
-        public async Task<IActionResult> CreateCompany(CreateCompanyProfileDTO dto)
-        {
-            CompanyProfile company = new CompanyProfile();
-            company.CompanyName = dto.CompanyName;
-            company.IBAN = dto.IBAN;
-            company.ProfilePhotoURL = "default";
-
-            _repository.Create(company);
-
-            await _repository.SaveAsync();
-            return Ok(new CompanyProfileDTO(company));
+            var query = new GetCompanyProfilesQuery();
+            var result = await _mediator.Send(query);
+            var toReturn = _mapper.Map<List<GetCompanyProfileDTO>>(result);
+            return Ok(toReturn);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetCompanyProfileById(int id)
         {
-            var user = _repository.GetCompanyWithProducts(id);
-            if (user == null)
+            var query = new GetCompanyProfileByIDQuery
             {
-                return NotFound("User-ul nu exista!");
+                CompanyProfileId = id
+            };
+            var result = await _mediator.Send(query);
+
+            if (result == null)
+            {
+                return NotFound("Company not found!");
             }
-            return Ok(new CompanyProfileDTO(user));
+            var toReturn = _mapper.Map<GetCompanyProfileDTO>(result);
+            return Ok(toReturn);
         }
 
-        [HttpPut("balance/{id}")]
-        public async Task<IActionResult> UpdateCompanyBalance(int id, double sum)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateCompanyBalance(int id, [FromBody] UpdateCompanyDTO dto)
         {
-            _repository.UpdateCompanyBalance(id, sum);
-            await _repository.SaveAsync();
-            return Ok(new CompanyProfileDTO(_repository.GetByIdAsync(id).Result));
+            var command = new UpdateCompanyProfileCommand
+            {
+                CompanyProfileId = id,
+                IBAN = dto.IBAN,
+                ProfilePhotoURL = dto.ProfilePhotoURL,
+                CompanyBalance = dto.CompanyBalance,
+                CompanyName = dto.CompanyName
+            };
+            var result = await _mediator.Send(command);
+            if(result == null)
+            {
+                return NotFound("Company not found!");
+            }
+            var toReturn = _mapper.Map<GetCompanyProfileDTO>(result);
+            return Ok(toReturn);
         }
 
-        [HttpPut("name/{name}")]
-        public async Task<IActionResult> UpdateCompanyName(int id, string name)
+        [HttpPut("{id}/CashOutProduct/{productId}")]
+        public async Task<IActionResult> CashOutObject(int id, int productId)
         {
-            if (name != null)
+            var command = new CashOutProductCommand
             {
-                _repository.UpdateCompanyName(id, name);
-
+                ProductId = productId,
+                CompanyId = id
+            };
+            var result = await _mediator.Send(command);
+            if(result == null)
+            {
+                return NotFound();
             }
-            await _repository.SaveAsync();
-            return Ok(new CompanyProfileDTO(_repository.GetByIdAsync(id).Result));
+            var toReturn = _mapper.Map<GetProductDTO>(result);
+            return Ok(toReturn);
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCompanyProfile(int id)
         {
-            var client = await _repository.GetByIdAsync(id);
-
-            if (client == null)
+            var command = new DeleteCompanyProfileCommand
             {
-                return NotFound("Produsul nu exista!");
+                CompanyId = id
+            };
+            var result = await _mediator.Send(command);
+            if(result == null)
+            {
+                return NotFound("Company not found!");
             }
-
-            _repository.Delete(client);
-
-            await _repository.SaveAsync();
-
             return NoContent();
         }
     }

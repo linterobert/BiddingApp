@@ -6,11 +6,16 @@ using System.Threading.Tasks;
 
 namespace BiddingApp.Domain.DTOs
 {
-    internal class CreateProductImageDTO
+    public class CreateProductImageDTO
     {
         public string Title { get; set; }
         public string URL { get; set; }
         public string Description { get; set; }
         public int ProductId { get; set; }
+
+        public CreateProductImageDTO()
+        {
+
+        }
     }
 }

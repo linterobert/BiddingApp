@@ -14,7 +14,10 @@ namespace BiddingApp.Domain.DTOs
         public string URL { get; set; }
         public string Description { get; set; }
         public int ProductId { get; set; }
+        public ProductImageDTO()
+        {
 
+        }
         public ProductImageDTO(ProductImage dto)
         {
             ProductImageId = dto.ProductImageId;

@@ -1,6 +1,10 @@
-﻿using BiddingApp.Aplication;
+﻿using AutoMapper;
+using BiddingApp.Aplication;
+using BiddingApp.Aplication.Commands;
+using BiddingApp.Aplication.Queries;
 using BiddingApp.Domain.DTOs;
 using BiddingApp.Models;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BiddingApp.API.Controllers
@@ -9,63 +13,67 @@ namespace BiddingApp.API.Controllers
     [ApiController]
     public class CardController : ControllerBase
     {
-        private readonly ICardRepository _repository;
-        public CardController(ICardRepository repository)
+        private readonly IMediator _mediator;
+        private readonly IMapper _mapper;
+        public CardController(IMediator mediator, IMapper mapper)
         {
-            _repository = repository;
+            _mediator = mediator;
+            _mapper = mapper;
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateCard(CreateCardDTO dto)
+        {
+            var command = _mapper.Map<CreateCardCommand>(dto);
+            var result = await _mediator.Send(command);
+            if(result == null)
+            {
+                return NotFound("Client not found");
+            }
+            var toReturn = _mapper.Map<CardDTO>(result);
+
+            return Ok(toReturn);
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetProducts()
+        public async Task<IActionResult> GetCards()
         {
-            var cards = _repository.GetAll();
-            var cardsToReturn = new List<CardDTO>();
+            var query = new GetCardsQuery();
+            var result = await _mediator.Send(query);
 
-            foreach (var card in cards)
-            {
-                cardsToReturn.Add(new CardDTO(card));
-            }
-            return Ok(cardsToReturn);
+            var toReturn = _mapper.Map<List<CardDTO>>(result);
+            return Ok(toReturn);
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetCardByCardNumber(string CardNumber)
+        [HttpGet("/CardNumber/{cardNumber}")]
+        public async Task<IActionResult> GetCardByCardNumber(string cardNumber)
         {
-            var card = _repository.GetCardByCardNumber(CardNumber);
-            if (card == null)
+            var query = new GetCardByCardNumberQuery
             {
-                return NotFound("Card-ul nu exista!");
+                CardNumber = cardNumber
+            };
+            var result = await _mediator.Send(query);
+            if (result == null)
+            {
+                return NotFound("Card not found!");
             }
-            return Ok(new CardDTO(card));
-        }
-        [HttpPost]
-        public async Task<IActionResult> CreateProduct(CreateCardDTO dto)
-        {
-            Card card = new Card();
-            card.CardNumber = dto.CardNumber;
-            card.ClientProfileId = dto.ClientId;
-            card.Pin = dto.PIN;
-            card.CVC = dto.CVC;
-            card.ExpireDate = dto.ExpireDate;
-            
-            _repository.Create(card);
-            await _repository.SaveAsync();
-            return Ok(new CardDTO(card));
+            var toReturn = _mapper.Map<CardDTO>(result);
+            return Ok(result);
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCard(int id)
         {
-            var client = await _repository.GetByIdAsync(id);
-
-            if (client == null)
+            var command = new DeleteCardCommand
             {
-                return NotFound("Produsul nu exista!");
+                CardId = id
+            };
+            var result = await _mediator.Send(command);
+
+            if (result == null)
+            {
+                return NotFound("Cardul nu exista!");
             }
-
-            _repository.Delete(client);
-
-            await _repository.SaveAsync();
 
             return NoContent();
         }

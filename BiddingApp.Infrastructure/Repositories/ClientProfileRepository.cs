@@ -8,30 +8,28 @@ namespace BiddingApp.Infrastructure.Repositories
     public class ClientProfileRepository : GenericRepository<ClientProfile>, IClientProfileRepository
     {
         public ClientProfileRepository(BiddingAppContext _context) : base(_context) { }
-
-        public IEnumerable<Product> GetProductsByClient(int id)
+        public async Task<List<Product>> GetProductsByClient(int id)
         {
-            return _context.Products.Where(a => a.ClientProfileId == id);
+            return await _context.Products.Where(a => a.ClientProfileId == id).ToListAsync();
         }
-
-        public IEnumerable<Review> GetReviewsByClient(int id)
+        public async Task<List<Review>> GetReviewsByClient(int id)
         {
-            return _context.Reviews.Where(a => a.ClientId == id);
+            return await _context.Reviews.Where(a => a.ClientId == id).ToListAsync();
         }
-        public ClientProfile GetClientProfileById(int id)
+        public async Task<ClientProfile> GetClientProfileById(int id)
         {
-            var client = _context.ClientProfiles.Include(x => x.Reviews).Include(x => x.ProductsOwn).Include(x => x.Cards).Where(x => x.ClientProfileId == id).FirstOrDefaultAsync();
-            return client.Result;
+            var client = await _context.ClientProfiles.Include(x => x.Reviews).Include(x => x.ProductsOwn).Include(x => x.Cards).Where(x => x.ClientProfileId == id).FirstOrDefaultAsync();
+            return client;
         }
-        public void UpdateBalance(int id, double sum)
+        public async Task UpdateBalance(int id, double sum)
         {
-            ClientProfile client = GetByIdAsync(id).Result;
+            var client = await GetByIdAsync(id);
             client.Balance += sum;
             Update(client);
         }
-        public void UpdateClientName(int id, string newName)
+        public async Task UpdateClientName(int id, string newName)
         {
-            ClientProfile client = GetByIdAsync(id).Result;
+            var client = await GetByIdAsync(id);
             client.ClientName = newName;
             Update(client);
         }

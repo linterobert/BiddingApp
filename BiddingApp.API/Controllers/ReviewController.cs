@@ -19,7 +19,7 @@ namespace BiddingApp.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetProducts()
         {
-            var reviews = _repository.GetAll();
+            var reviews = await _repository.GetAll();
             var reviewsToReturn = new List<ReviewDTO>();
 
             foreach (var review in reviews)

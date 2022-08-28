@@ -1,6 +1,10 @@
-﻿using BiddingApp.Aplication;
+﻿using AutoMapper;
+using BiddingApp.Aplication;
+using BiddingApp.Aplication.Commands;
+using BiddingApp.Aplication.Queries;
 using BiddingApp.Domain.DTOs;
 using BiddingApp.Models;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BiddingApp.API.Controllers
@@ -9,108 +13,120 @@ namespace BiddingApp.API.Controllers
     [ApiController]
     public class ClientProfileController : ControllerBase
     {
-
-        private readonly IClientProfileRepository _repository;
-        private readonly ICardRepository _cardRepository;
-        public ClientProfileController(IClientProfileRepository repository, ICardRepository cardRepository)
+        private readonly IMediator _mediator;
+        private readonly IMapper _mapper;
+        public ClientProfileController(IMediator mediator, IMapper mapper)
         {
-            _repository = repository;
-            _cardRepository = cardRepository;
-        }
-
-        [HttpGet]
-
-        public async Task<IActionResult> GetClientProfiles()
-        {
-            var clients = _repository.GetAll();
-            var clientsToReturn = new List<ClientProfileDTO>();
-
-            foreach (var client in clients)
-            {
-                clientsToReturn.Add(new ClientProfileDTO(client));
-            }
-            return Ok(clientsToReturn);
+            _mediator = mediator;
+            _mapper = mapper;
         }
 
         [HttpPost]
-
         public async Task<IActionResult> CreateClient(CreateClientProfileDTO dto)
         {
-            ClientProfile client = new ClientProfile();
-            client.ClientName = dto.ClientName;
-            client.Balance = 0.00;
-            client.Cards = new List<Card>();
-            client.ProductsOwn = new List<Product>();
-            client.Reviews = new List<Review>();
-            client.ProfilePhotoURL = "default";
+            var command = _mapper.Map<CreateClientProfileCommand>(dto);
+            var created = await _mediator.Send(command);
+            return Ok(created);
+        }
 
-            _repository.Create(client);
-
-            await _repository.SaveAsync();
-            return Ok(new ClientProfileDTO(client));
+        [HttpGet]
+        public async Task<IActionResult> GetClientProfiles()
+        {
+            var query = new GetClientsQuery();
+            var result = await _mediator.Send(query);
+            var clients = _mapper.Map<List<ClientProfileGetDTO>>(result);
+            return Ok(clients);
         }
 
         [HttpGet("{id}")]
-
         public async Task<IActionResult> GetClientProfileById(int id)
         {
-            var user = _repository.GetClientProfileById(id);
-            if (user == null)
+            var query = new GetClientProfileByIDQuery { ClientProfileId = id };
+            var result = await _mediator.Send(query);
+
+            var client = _mapper.Map<ClientProfileDTO>(result);
+
+            if(client == null)
             {
-                return NotFound("User-ul nu exista!");
+                return NotFound("Client not found!");
             }
-            return Ok(new ClientProfileDTO(user));
+            return Ok(client);
         }
 
-        [HttpPut("balance/{id}")]
-        public async Task<IActionResult> UpdateClientBalance(int id, double sum)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateClient(int id, [FromBody] ClientProfilePutDTO dto)
         {
-            _repository.UpdateBalance(id, sum);
-            await _repository.SaveAsync();
-            return Ok(new ClientProfileDTO(_repository.GetByIdAsync(id).Result));
+
+            var command = new UpdateClientCommand
+            {
+                ClientName = dto.ClientName,
+                ClientProfileId = id,
+                Balance = dto.Balance,
+                ProfilePhotoURL = dto.ProfilePhotoURL
+            };
+
+            var result = await _mediator.Send(command);
+
+            if(result == null)
+            {
+                return NotFound("Client not found!");
+            }
+
+            return Ok(command);
         }
 
-        [HttpPut("name/{name}")]
-        public async Task<IActionResult> UpdateClientName(int id, string name)
+        [HttpPut("{id}/product/{productId}/offer/{sum}")]
+        public async Task<IActionResult> MakeOffer(int id, int productId, double sum)
         {
-            if (name != null)
+            var command = new MakeOfferCommand
             {
-                _repository.UpdateClientName(id, name);
-
+                ClientId = id,
+                ProductId = productId,
+                sum = sum
+            };
+            var result = await _mediator.Send(command);
+            if(result == null)
+            {
+                return NotFound();
             }
-            await _repository.SaveAsync();
-            return Ok(new ClientProfileDTO(_repository.GetByIdAsync(id).Result));
+            var toReturn = _mapper.Map<GetProductDTO>(result);
+            return Ok(toReturn);
         }
 
         [HttpPut("{id}/funds/{cardNumber}")]
-        public async Task<IActionResult> UpdateClientName(int id, double sum, string cardNumber, string CVC, string Pin)
+        public async Task<IActionResult> AddFunds(int id, string cardNumber, [FromBody] AddFundsDTO dto)
         {
-            var card = _cardRepository.GetCardByCardNumber(cardNumber);
-            if (card != null)
+            var command = new AddFundsCommand
             {
-                if (card.ExpireDate.CompareTo(DateTime.Now) >= 0 && card.Pin == Pin && card.CVC == CVC)
-                {
-                    _repository.UpdateBalance(id, sum);
-                }
+                ClientProfileId = id,
+                Sum = dto.Sum,
+                CardNumber = cardNumber,
+                CVC = dto.CVC,
+                PIN = dto.Pin
+            };
+            var result = await _mediator.Send(command);
 
+            if(result == null)
+            {
+                return NotFound("Client or card not found!");
             }
-            await _repository.SaveAsync();
-            return Ok(new ClientProfileDTO(_repository.GetByIdAsync(id).Result));
+            var toReturn = _mapper.Map<ClientProfileGetDTO>(result);
+            return Ok(toReturn);
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteClientProfile(int id)
         {
-            var client = await _repository.GetByIdAsync(id);
-
-            if (client == null)
+            var command = new DeleteClientProfileCommand
             {
-                return NotFound("Clientul nu exista!");
+                ClientProfileId = id
+            };
+            var result = await _mediator.Send(command);
+
+            if(result == null)
+            {
+                return NotFound("Client not found!");
             }
-
-            _repository.Delete(client);
-
-            await _repository.SaveAsync();
 
             return NoContent();
         }
