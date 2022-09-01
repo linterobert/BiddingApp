@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BiddingApp.Infrastructure.Migrations
 {
     [DbContext(typeof(BiddingAppContext))]
-    [Migration("20220821125037_Notification")]
+    [Migration("20220831195809_Notification")]
     partial class Notification
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -38,6 +38,9 @@ namespace BiddingApp.Infrastructure.Migrations
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("Good")
+                        .HasColumnType("bit");
+
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
 
@@ -56,7 +59,7 @@ namespace BiddingApp.Infrastructure.Migrations
 
                     b.HasIndex("ClientId");
 
-                    b.ToTable("ClientNotification");
+                    b.ToTable("ClientNotifications");
                 });
 
             modelBuilder.Entity("BiddingApp.Domain.Models.CompanyNotification", b =>
@@ -72,6 +75,9 @@ namespace BiddingApp.Infrastructure.Migrations
 
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");
+
+                    b.Property<bool>("Good")
+                        .HasColumnType("bit");
 
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
@@ -91,7 +97,7 @@ namespace BiddingApp.Infrastructure.Migrations
 
                     b.HasIndex("CompanyId");
 
-                    b.ToTable("CompanyNotification");
+                    b.ToTable("CompanyNotifications");
                 });
 
             modelBuilder.Entity("BiddingApp.Domain.Models.ProductImage", b =>
@@ -227,7 +233,6 @@ namespace BiddingApp.Infrastructure.Migrations
                         .HasColumnType("bit");
 
                     b.Property<int?>("ClientProfileId")
-                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<int>("CompanyProfileId")
@@ -333,8 +338,7 @@ namespace BiddingApp.Infrastructure.Migrations
                 {
                     b.HasOne("BiddingApp.Models.ClientProfile", "ClientProfile")
                         .WithMany("ProductsOwn")
-                        .HasForeignKey("ClientProfileId")
-                        .IsRequired();
+                        .HasForeignKey("ClientProfileId");
 
                     b.HasOne("BiddingApp.Models.CompanyProfile", "CompanyProfile")
                         .WithMany("Products")

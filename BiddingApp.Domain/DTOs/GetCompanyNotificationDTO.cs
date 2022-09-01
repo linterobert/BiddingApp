@@ -1,20 +1,17 @@
-﻿using BiddingApp.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BiddingApp.Domain.Models
+namespace BiddingApp.Domain.DTOs
 {
-    public class ClientNotification : Notification
+    public class GetCompanyNotificationDTO 
     {
-        public ClientNotification() : base() { }
+        GetCompanyNotificationDTO() { }
         public int Id { get; set; }
-        public int ClientId { get; set; }
+        public int CompanyId { get; set; }
         public int ProductId { get; set; }
-        public ClientProfile Client { get; set; }
         public DateTime Created { get; set; }
         public bool Good { get; set; }
         public string Text { get; set; }

@@ -1,6 +1,10 @@
-﻿using BiddingApp.Aplication;
+﻿using AutoMapper;
+using BiddingApp.Aplication;
+using BiddingApp.Aplication.Commands;
+using BiddingApp.Aplication.Queries;
 using BiddingApp.Domain.DTOs;
 using BiddingApp.Models;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BiddingApp.API.Controllers
@@ -10,79 +14,86 @@ namespace BiddingApp.API.Controllers
     public class ReviewController : ControllerBase
     {
         private readonly IReviewRepository _repository;
+        private readonly IMediator _mediator;
+        private readonly IMapper _mapper;
 
-        public ReviewController(IReviewRepository repository)
+        public ReviewController(IReviewRepository repository, IMediator mediator, IMapper mapper)
         {
             _repository = repository;
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> GetProducts()
-        {
-            var reviews = await _repository.GetAll();
-            var reviewsToReturn = new List<ReviewDTO>();
-
-            foreach (var review in reviews)
-            {
-                reviewsToReturn.Add(new ReviewDTO(review));
-            }
-            return Ok(reviewsToReturn);
-        }
-
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetReviewById(int id)
-        {
-            var review = _repository.GetByIdAsync(id).Result;
-            if (review == null)
-            {
-                return NotFound("Review-ul nu exista!");
-            }
-            return Ok(new ReviewDTO(review));
+            _mediator = mediator;
+            _mapper = mapper;
         }
 
         [HttpPost]
         public async Task<IActionResult> CreateReview(CreateReviewDTO dto)
         {
-            Review review = new Review();
+            var command = new CreateReviewCommand
+            {
+                ProductId = dto.ProductId,
+                ClientId = dto.ClientId,
+                StarNumber = dto.StarNumber,
+                Text = dto.Text
+            };
+            var result = await _mediator.Send(command);
+            if (result == null)
+            {
+                return NotFound("You already comment at this product!");
+            }
+            var toReturn = _mapper.Map<ReviewDTO>(result);
+            return Ok(toReturn);
+        }
 
-            review.StarNumber = dto.StarNumber;
-            review.Text = dto.Text;
-            review.PostTime = DateTime.Now;
-            review.ClientId = dto.ClientId;
-            review.ProductId = dto.ProductId;
-           
-            _repository.Create(review);
+        [HttpGet]
+        public async Task<IActionResult> GetProducts()
+        {
+            var command = new GetReviewsQuery();
+            var result = await _mediator.Send(command);
+            var toReturn = _mapper.Map<List<GetReviewDTO>>(result);
+            return Ok(toReturn);
+        }
 
-            await _repository.SaveAsync();
-            return Ok(new ReviewDTO(review));
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetReviewById(int id)
+        {
+            var command = new GetReviewByIDQuery();
+            var result = await _mediator.Send(command);
+            return Ok(result);
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteReview(int id)
         {
-            var review= await _repository.GetByIdAsync(id);
-
-            if (review == null)
+            var command = new DeleteReviewCommand
             {
-                return NotFound("Review-ul nu exista!");
+                ReviewID = id
+            };
+            var result = await _mediator.Send(command);
+            if(result == null)
+            {
+                return NotFound("Review not found!");
             }
-
-            _repository.Delete(review);
-
-            await _repository.SaveAsync();
-
             return NoContent();
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateReview(int id, string text, int starNumber)
+        public async Task<IActionResult> UpdateReview(int id, [FromBody] UpdateReviewDTO dto)
         {
-            var review = _repository.GetByIdAsync(id).Result;
-            review.StarNumber = starNumber;
-            review.Text = text;
-            _repository.Update(review);
-            await _repository.SaveAsync();
-            return Ok(new ReviewDTO(review));
+            var command = new UpdateReviewCommand
+            {
+                ReviewId = id,
+                ClientId = dto.ClientId,
+                StarNumber = dto.StarNumber,
+                Text = dto.Text
+            };
+            var result = await _mediator.Send(command);
+            if(result == null)
+            {
+                return NotFound("Review not found!");
+            }
+            var toReturn = _mapper.Map<GetReviewDTO>(result);
+            return Ok(toReturn);
         }
+
+
     }
 }

@@ -15,7 +15,6 @@ namespace BiddingApp.Infrastructure.Data
         public DbSet<Review> Reviews { get; set; }
         public DbSet<ClientNotification> ClientNotifications { get; set; }
         public DbSet<CompanyNotification> CompanyNotifications { get; set; }
-
         protected override void OnConfiguring(DbContextOptionsBuilder optionBuilder)
         {
             optionBuilder

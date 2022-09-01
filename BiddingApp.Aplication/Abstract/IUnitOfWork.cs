@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BiddingApp.Aplication.Abstract;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,6 +16,7 @@ namespace BiddingApp.Aplication
         public ICompanyProfileRepository CompanyProfileRepository { get; }
         public IProductImageRepository ProductImageRepository { get; }
         public IReviewRepository ReviewRepository { get; }
+        public ICompanyNotificationRepository CompanyNotificationRepository { get; }
 
         Task Save();
     }

@@ -1,6 +1,7 @@
 ﻿using BiddingApp.Aplication;
 using BiddingApp.Domain.Models;
 using BiddingApp.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,9 +14,9 @@ namespace BiddingApp.Infrastructure.Repositories
     {
         public ClientNotificationRepository(BiddingAppContext _context) : base(_context) { }
 
-        public IEnumerable<ClientNotification> GetNotificationsByClientId(int clientId)
+        public async Task<List<ClientNotification>> GetNotificationsByClientID(int clientId)
         {
-            var notifications = _context.ClientNotifications.Where(not => not.ClientId == clientId);
+            var notifications = await _context.ClientNotifications.Where(not => not.ClientId == clientId).ToListAsync();
             return notifications;
         }
     }

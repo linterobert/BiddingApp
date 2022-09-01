@@ -1,4 +1,5 @@
 ﻿using BiddingApp.Aplication;
+using BiddingApp.Aplication.Abstract;
 using BiddingApp.Infrastructure.Data;
 using System;
 using System.Collections.Generic;
@@ -15,7 +16,7 @@ namespace BiddingApp.Infrastructure
         public UnitOfWork(BiddingAppContext context, IProductRepository productRepository, ICardRepository cardRepository,
             IClientNotificationRepository clientNotificationRepository, IClientProfileRepository clientProfileRepository,
             ICompanyProfileRepository companyProfileRepository, IProductImageRepository productImageRepository,
-            IReviewRepository reviewRepository)
+            IReviewRepository reviewRepository, ICompanyNotificationRepository companyNotificationRepository)
         {
             _context = context;
             ProductImageRepository = productImageRepository;
@@ -25,7 +26,7 @@ namespace BiddingApp.Infrastructure
             ClientProfileRepository = clientProfileRepository;
             ReviewRepository = reviewRepository;
             CompanyProfileRepository = companyProfileRepository;
-
+            CompanyNotificationRepository = companyNotificationRepository;
         }
 
         public IProductImageRepository ProductImageRepository { get; private set; }
@@ -35,7 +36,7 @@ namespace BiddingApp.Infrastructure
         public IClientNotificationRepository ClientNotificationRepository { get; private set; }
         public ICompanyProfileRepository CompanyProfileRepository { get; private set; }
         public IReviewRepository ReviewRepository { get; private set; }
-
+        public ICompanyNotificationRepository CompanyNotificationRepository { get; private set; }
         public void Dispose()
         {
             _context.Dispose();

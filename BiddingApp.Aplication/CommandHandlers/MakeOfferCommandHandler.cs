@@ -20,7 +20,7 @@ namespace BiddingApp.Aplication.CommandHandlers
         {
             var product = await _unitOfWork.ProductRepository.GetProductByID(request.ProductId);
             var client = await _unitOfWork.ClientProfileRepository.GetByIdAsync(request.ClientId);
-            if (product == null || client == null || product.ClientProfileId == client.ClientProfileId || client.Balance < request.sum || product.FinalTime.CompareTo(DateTime.Now) < 0 || product.ActualPrice > request.sum)
+            if (product == null || client == null || product.ClientProfileId == client.ClientProfileId || client.Balance <= request.sum || product.FinalTime.CompareTo(DateTime.Now) < 0 || product.ActualPrice > request.sum)
             {
                 return null;
             }
@@ -28,6 +28,7 @@ namespace BiddingApp.Aplication.CommandHandlers
             if(oldclient != null)
             {
                 oldclient.Balance = Math.Round(oldclient.Balance + product.ActualPrice*(1-Product.BitConstant), 2);
+                await _unitOfWork.ClientProfileRepository.Update(oldclient);
             }
             product.ActualPrice = Math.Round(request.sum*(1+Product.BitConstant),2);
             product.ClientProfileId = request.ClientId;
@@ -38,7 +39,6 @@ namespace BiddingApp.Aplication.CommandHandlers
             {
                 product.FinalTime = product.FinalTime.AddMinutes(1);
             }
-            await _unitOfWork.ClientProfileRepository.Update(oldclient);
             await _unitOfWork.ClientProfileRepository.Update(client);
             await _unitOfWork.ProductRepository.Update(product);
             await _unitOfWork.Save();

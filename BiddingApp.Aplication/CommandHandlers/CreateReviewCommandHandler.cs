@@ -20,7 +20,11 @@ namespace BiddingApp.Aplication.CommandHandlers
         public async Task<Review> Handle(CreateReviewCommand request, CancellationToken cancellationToken)
         {
             Review review = new Review();
-
+            var check = await _unitOfWork.ReviewRepository.GetReviewByProductIDandClientID(request.ProductId, request.ClientId);
+            if(check != null)
+            {
+                return null;
+            }
             var client = await _unitOfWork.ClientProfileRepository.GetByIdAsync(request.ClientId);
             var product = await _unitOfWork.ProductRepository.GetByIdAsync(request.ProductId);
 
@@ -37,6 +41,10 @@ namespace BiddingApp.Aplication.CommandHandlers
                 await _unitOfWork.ReviewRepository.Create(review);
 
                 await _unitOfWork.Save();
+            }
+            else
+            {
+                return null;
             }
             return review;
         }

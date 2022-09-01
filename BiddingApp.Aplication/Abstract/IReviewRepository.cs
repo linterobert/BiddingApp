@@ -9,5 +9,7 @@ namespace BiddingApp.Aplication
 {
     public interface IReviewRepository : IGenericRepository<Review>
     {
+        Task<Review> GetReviewByProductIDandClientID(int productID, int clientID);
+        Task<List<Review>> GetReviews();
     }
 }
