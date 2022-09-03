@@ -9,24 +9,23 @@ namespace BiddingApp.Infrastructure.Repositories
     {
         public CompanyProfileRepository(BiddingAppContext _context) : base(_context) { }
 
-        public CompanyProfile GetCompanyWithProducts(int id)
+        public async Task<CompanyProfile> GetCompanyWithProducts(int id)
         {
-            var company = _context.CompanyProfiles.Include(x => x.Products).Where(x => x.CompanyProfileId == id).FirstOrDefaultAsync();
-            return company.Result;
+            return await _context.CompanyProfiles.Include(x => x.Products).Include(x => x.Notifications).Where(x => x.CompanyProfileId == id).FirstOrDefaultAsync();
         }
 
-        public void UpdateCompanyBalance(int id, double balance)
+        public async void UpdateCompanyBalance(int id, double balance)
         {
             var company = GetByIdAsync(id).Result;
             company.CompanyBalance += balance;
-            Update(company);
+            await Update(company);
         }
 
-        public void UpdateCompanyName(int id, string newName)
+        public async void UpdateCompanyName(int id, string newName)
         {
             var company = GetByIdAsync(id).Result;
             company.CompanyName = newName;
-            Update(company);
+            await Update(company);
         }
     }
 }

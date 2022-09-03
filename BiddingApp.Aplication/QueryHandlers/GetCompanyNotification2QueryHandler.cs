@@ -9,10 +9,10 @@ using System.Threading.Tasks;
 
 namespace BiddingApp.Aplication.QueryHandlers
 {
-    public class GetCompanyNotificationsQueryHandler : IRequestHandler<GetCompanyNotificationQuery, List<CompanyNotification>>
+    public class GetCompanyNotifications2QueryHandler : IRequestHandler<GetCompanyNotificationQuery, List<CompanyNotification>>
     {
         private readonly IUnitOfWork _unitOfWork;
-        public GetCompanyNotificationsQueryHandler(IUnitOfWork unitOfWork)
+        public GetCompanyNotifications2QueryHandler(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }

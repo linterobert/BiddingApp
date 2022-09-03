@@ -1,9 +1,7 @@
 ﻿using AutoMapper;
-using BiddingApp.Aplication;
 using BiddingApp.Aplication.Commands;
 using BiddingApp.Aplication.Queries;
 using BiddingApp.Domain.DTOs;
-using BiddingApp.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -45,7 +43,7 @@ namespace BiddingApp.API.Controllers
             return Ok(toReturn);
         }
 
-        [HttpGet("/CardNumber/{cardNumber}")]
+        [HttpGet("/cardNumber/{cardNumber}")]
         public async Task<IActionResult> GetCardByCardNumber(string cardNumber)
         {
             var query = new GetCardByCardNumberQuery

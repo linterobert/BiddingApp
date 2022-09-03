@@ -13,13 +13,11 @@ namespace BiddingApp.API.Controllers
     [ApiController]
     public class ReviewController : ControllerBase
     {
-        private readonly IReviewRepository _repository;
         private readonly IMediator _mediator;
         private readonly IMapper _mapper;
 
-        public ReviewController(IReviewRepository repository, IMediator mediator, IMapper mapper)
+        public ReviewController(IMediator mediator, IMapper mapper)
         {
-            _repository = repository;
             _mediator = mediator;
             _mapper = mapper;
         }

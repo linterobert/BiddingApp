@@ -41,6 +41,7 @@ namespace BiddingApp.Aplication.CommandHandlers
             }
             await _unitOfWork.ClientProfileRepository.Update(client);
             await _unitOfWork.ProductRepository.Update(product);
+
             await _unitOfWork.Save();
             return product;
         }

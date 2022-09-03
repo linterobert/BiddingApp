@@ -11,6 +11,6 @@ namespace BiddingApp.Aplication
     {
         void UpdateCompanyName(int id, string newName);
         void UpdateCompanyBalance(int id, double balance);
-        CompanyProfile GetCompanyWithProducts(int id);
+        Task<CompanyProfile> GetCompanyWithProducts(int id);
     }
 }

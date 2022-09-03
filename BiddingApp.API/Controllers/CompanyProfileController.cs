@@ -1,11 +1,8 @@
 ﻿using AutoMapper;
-using BiddingApp.Aplication;
 using BiddingApp.Aplication.Commands;
 using BiddingApp.Aplication.Queries;
 using BiddingApp.Domain.DTOs;
-using BiddingApp.Models;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BiddingApp.API.Controllers
@@ -54,6 +51,76 @@ namespace BiddingApp.API.Controllers
             }
             var toReturn = _mapper.Map<GetCompanyProfileDTO>(result);
             return Ok(toReturn);
+        }
+        [HttpGet("/api/CompanyProfile/{id}/products")]
+        public async Task<IActionResult> GetCompanyProducts(int id)
+        {
+            var query = new GetCompanyProductsQuery
+            {
+                CompanyID = id
+            };
+            var result = await _mediator.Send(query);
+
+            if (result == null)
+            {
+                return NotFound("Company not found!");
+            }
+            return Ok(result);
+        }
+        [HttpGet("/api/CompanyProfile/{id}/notifications")]
+        public async Task<IActionResult> GetCompanyNotifications(int id)
+        {
+            var query = new GetCompanyNotificationsQuery
+            {
+                CompanyID = id
+            };
+            var result = await _mediator.Send(query);
+
+            if (result == null)
+            {
+                return NotFound("Company not found!");
+            }
+            return Ok(result);
+        }
+        [HttpGet("/api/CompanyProfile/{id}/products-own/page-number/{pageNumber}/count/{count}")]
+        public async Task<IActionResult> GetCompanyProductsByPage(int id, int pageNumber, int count)
+        {
+            var query = new GetCompanyProductsByPageQuery
+            {
+                CompanyID = id,
+                PageNumber = pageNumber,
+                Index = count
+            };
+            var result = await _mediator.Send(query);
+            if (result == null)
+            {
+                return NotFound("Company not found!");
+            }
+            if (result.Count == 0)
+            {
+                return NotFound("Page not found!");
+            }
+            return Ok(result);
+        }
+        [HttpGet("/api/CompanyProfile/{id}/notifications/page-number/{pageNumber}/count/{count}")]
+        public async Task<IActionResult> GetCompanyNotificationsByPage(int id, int pageNumber, int count)
+        {
+            var query = new GetCompanyNotificationsByPageNumberQuery
+            {
+                CompanyID = id,
+                PageNumber = pageNumber,
+                Index = count
+            };
+            var result = await _mediator.Send(query);
+            if (result == null)
+            {
+                return NotFound("Company not found!");
+            }
+            if (result.Count == 0)
+            {
+                return NotFound("Page not found!");
+            }
+            return Ok(result);
         }
 
         [HttpPut("{id}")]

@@ -18,7 +18,7 @@ namespace BiddingApp.Infrastructure.Repositories
         }
         public async Task<ClientProfile> GetClientProfileById(int id)
         {
-            var client = await _context.ClientProfiles.Include(x => x.Reviews).Include(x => x.ProductsOwn).Include(x => x.Cards).Where(x => x.ClientProfileId == id).FirstOrDefaultAsync();
+            var client = await _context.ClientProfiles.Include(x => x.Reviews).Include(x => x.ProductsOwn).Include(x => x.Cards).Where(x => x.ClientProfileId == id).Include(x => x.Notifications).FirstOrDefaultAsync();
             return client;
         }
         public async Task UpdateBalance(int id, double sum)

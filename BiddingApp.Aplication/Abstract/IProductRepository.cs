@@ -9,12 +9,13 @@ namespace BiddingApp.Aplication
 {
     public interface IProductRepository : IGenericRepository<Product>
     {
-        Task<Product> GetProductByID(int id);
-        IEnumerable<Product> GetActiveProducts();
-        IEnumerable<Product> GetProducts();
-        IEnumerable<Product> GetProductsByPrice(double min, double max);
-        IEnumerable<Product> GetProductsByClientId(int id, int clientId);
-        IEnumerable<Product> GetProductsByCompanyId(int id, int companyId);
+        Task<Product?> GetProductByID(int id);
+        Task<List<Product>> GetActiveProducts();
+        Task<List<Product>> GetProductsByPrice(double min, double max);
+        Task<List<Product>> GetProductsByClientId(int id, int clientId);
+        Task<List<Product>> GetProductsByCompanyId(int id, int companyId);
+        Task<List<Product>> GetProductsByTime(DateTime time1, DateTime time2);
+        Task<List<Product>> GetProductsByPageNumber(int pageNumber, int elements);
         void UpdatePrice(int id, double price);
         void ChangeOwner(int id, int clientId);
     }

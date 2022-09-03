@@ -1,11 +1,8 @@
 ﻿using AutoMapper;
-using BiddingApp.Aplication;
 using BiddingApp.Aplication.Commands;
 using BiddingApp.Aplication.Queries;
 using BiddingApp.Domain.DTOs;
-using BiddingApp.Models;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BiddingApp.API.Controllers
@@ -67,7 +64,58 @@ namespace BiddingApp.API.Controllers
             }
             return Ok(result);
         }
+        [HttpGet("/api/Product/pageNumber/{pageNumber}/index/{index}")]
+        public async Task<IActionResult> GetProductByPage(int pageNumber, int index)
+        {
+            var query = new GetProductsByPageQuery
+            {
+                PageNumber = pageNumber,
+                Index = index
+            };
+            var result = await _mediator.Send(query);
 
+            if (result.Count == 0)
+            {
+                return NotFound("Page not found!");
+            }
+            return Ok(result);
+        }
+
+        [HttpGet("/api/Product/{id}/reviews")]
+        public async Task<IActionResult> GetProductReviews(int id)
+        {
+            var query = new GetProductReviewsQuery
+            {
+                ProductID = id
+            };
+            var result = await _mediator.Send(query);
+
+            if (result == null)
+            {
+                return NotFound("Product not found!");
+            }
+            return Ok(result);
+        }
+        [HttpGet("/api/Product/{id}/reviews/page-number/{pageNumber}/count/{count}")]
+        public async Task<IActionResult> GetProductReviewsByPage(int id, int pageNumber, int count)
+        {
+            var query = new GetProductReviewsByPageQuery
+            {
+                ProductID = id,
+                PageNumber = pageNumber,
+                Index = count
+            };
+            var result = await _mediator.Send(query);
+            if (result == null)
+            {
+                return NotFound("Product not found!");
+            }
+            if (result.Count == 0)
+            {
+                return NotFound("Page not found!");
+            }
+            return Ok(result);
+        }
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateProduct(int id, [FromBody] CreateProductDTO dto)
         {
