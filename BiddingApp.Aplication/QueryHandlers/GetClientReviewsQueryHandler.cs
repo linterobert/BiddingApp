@@ -19,12 +19,12 @@ namespace BiddingApp.Aplication.QueryHandlers
 
         public async Task<List<Review>> Handle(GetClientReviewsQuery request, CancellationToken cancellationToken)
         {
-            var client = await _unitOfWork.ClientProfileRepository.GetClientProfileById(request.ClientId);
+            var client = await _unitOfWork.ClientProfileRepository.GetByIdAsync(request.ClientId);
             if (client == null)
             {
                 return null;
             }
-            var reviews = client.Reviews;
+            var reviews = await _unitOfWork.ReviewRepository.GetReviewsByClientID(request.ClientId);
             return reviews;
         }
     }

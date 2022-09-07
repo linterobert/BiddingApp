@@ -11,24 +11,29 @@ namespace BiddingApp.API.Controllers
     [ApiController]
     public class CompanyNotificationController : Controller
     {
+        private readonly ILogger _logger;
         private readonly IMediator _mediator;
         private readonly IMapper _mapper;
-        public CompanyNotificationController(IMediator mediator, IMapper mapper)
+        public CompanyNotificationController(IMediator mediator, IMapper mapper, ILogger<CompanyNotificationController> logger)
         {
             _mediator = mediator;
             _mapper = mapper;
+            _logger = logger;
         }
 
         [HttpPost]
         public async Task<IActionResult> CreateCompanyNotification(CreateCompanyNotificationDTO dto)
         {
+            _logger.LogInformation($"Create notification for company with id {dto.CompanyID}");
             var command = _mapper.Map<CreateCompanyNotificationCommand>(dto);
             var result = await _mediator.Send(command);
             if (result == null)
             {
+                _logger.LogInformation($"Company not found");
                 return NotFound("Company or product not found!");
             }
-            return Ok(result);
+            var toReturn = _mapper.Map<GetCompanyNotificationDTO>(result);
+            return Ok(toReturn);
         }
 
         [HttpGet]
@@ -58,6 +63,7 @@ namespace BiddingApp.API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCompanyNotification(int id)
         {
+            _logger.LogInformation($"Delete company notification with id {id}");
             var command = new DeleteCompanyNotificationCommand
             {
                 Id = id
@@ -66,6 +72,7 @@ namespace BiddingApp.API.Controllers
 
             if (result == null)
             {
+                _logger.LogError("Notification not found");
                 return NotFound("Notification not found!");
             }
 

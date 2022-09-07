@@ -11,6 +11,7 @@ namespace BiddingApp.Domain.DTOs
         public int ReviewID { get; set; }
         public string Text { get; set; }
         public int ProductId { get; set; }
+        public string ProductName { get; set; }
         public int ClientId { get; set; }
         public string Client { get; set; }
         public int StarNumber { get; set; }

@@ -23,17 +23,17 @@ namespace BiddingApp.Infrastructure.Repositories
         {
             return await _context.Products.Where(x => x.FinalTime.CompareTo(DateTime.Now) >= 0).OrderByDescending(x => x.FinalTime).ToListAsync();
         }
-        public async Task<List<Product>> GetProductsByClientId(int id, int clientId)
+        public async Task<List<Product>> GetProductsByClientId(int clientId)
         {
-            return await _context.Products.Where(x => x.ClientProfileId == clientId).ToListAsync();
+            return await _context.Products.Where(x => x.ClientProfileId == clientId).Include(x => x.CompanyProfile).ToListAsync();
         }
         public async Task<List<Product>> GetAll()
         {
             return await _context.Products.Include(x => x.CompanyProfile).Include(x => x.ClientProfile).ToListAsync();
         }
-        public async Task<List<Product>> GetProductsByCompanyId(int id, int companyId)
+        public async Task<List<Product>> GetProductsByCompanyId(int companyId)
         {
-            return await _context.Products.Where(x => x.CompanyProfileId == companyId).ToListAsync();
+            return await _context.Products.Where(x => x.CompanyProfileId == companyId).Include(x => x.ClientProfile).ToListAsync();
         }
 
         public async Task<List<Product>> GetProductsByPrice(double min, double max)

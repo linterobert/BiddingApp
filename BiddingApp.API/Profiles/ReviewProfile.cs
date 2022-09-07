@@ -9,7 +9,8 @@ namespace BiddingApp.API.Profiles
         public ReviewProfile()
         {
             CreateMap<Review, ReviewDTO>();
-            CreateMap<Review, GetReviewDTO>().ForMember(x => x.Client, opt => opt.MapFrom(x => x.ClientProfile.ClientName));
+            CreateMap<Review, GetReviewDTO>().ForMember(x => x.Client, opt => opt.MapFrom(x => x.ClientProfile.ClientName))
+                .ForMember(x => x.ProductName, opt => opt.MapFrom(x => x.Product.ProductName));
         }
     }
 }

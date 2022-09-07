@@ -11,20 +11,28 @@ namespace BiddingApp.API.Controllers
     [ApiController]
     public class CompanyProfileController : ControllerBase
     {
+        private readonly ILogger _logger;
         private readonly IMediator _mediator;
         private readonly IMapper _mapper;
-        public CompanyProfileController(IMediator mediator, IMapper mapper)
+        public CompanyProfileController(IMediator mediator, IMapper mapper, ILogger<CompanyProfileController> logger)
         {
             _mediator = mediator;
             _mapper = mapper;
+            _logger = logger;
         }
 
         [HttpPost]
         public async Task<IActionResult> CreateCompany(CreateCompanyProfileDTO dto)
         {
+            _logger.LogInformation("Create company profile");
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             var command = _mapper.Map<CreateCompanyProfileCommand>(dto);
             var created = await _mediator.Send(command);
-            return Ok(created);
+            var toReturn = _mapper.Map<GetCompanyProfileDTO>(created);
+            return Ok(toReturn);
         }
 
         [HttpGet]
@@ -39,6 +47,7 @@ namespace BiddingApp.API.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetCompanyProfileById(int id)
         {
+            _logger.LogInformation($"Get company with id {id}");
             var query = new GetCompanyProfileByIDQuery
             {
                 CompanyProfileId = id
@@ -47,14 +56,17 @@ namespace BiddingApp.API.Controllers
 
             if (result == null)
             {
+                _logger.LogError("Company not found");
                 return NotFound("Company not found!");
             }
             var toReturn = _mapper.Map<GetCompanyProfileDTO>(result);
             return Ok(toReturn);
         }
+
         [HttpGet("/api/CompanyProfile/{id}/products")]
         public async Task<IActionResult> GetCompanyProducts(int id)
         {
+            _logger.LogInformation($"Get products for company with id {id}");
             var query = new GetCompanyProductsQuery
             {
                 CompanyID = id
@@ -63,13 +75,16 @@ namespace BiddingApp.API.Controllers
 
             if (result == null)
             {
+                _logger.LogError("Company not found");
                 return NotFound("Company not found!");
             }
-            return Ok(result);
+            var toReturn = _mapper.Map<List<GetProductDTO>>(result);
+            return Ok(toReturn);
         }
         [HttpGet("/api/CompanyProfile/{id}/notifications")]
         public async Task<IActionResult> GetCompanyNotifications(int id)
         {
+            _logger.LogInformation($"Get notifications for company with id {id}");
             var query = new GetCompanyNotificationsQuery
             {
                 CompanyID = id
@@ -78,13 +93,16 @@ namespace BiddingApp.API.Controllers
 
             if (result == null)
             {
+                _logger.LogError("Company not found!");
                 return NotFound("Company not found!");
             }
-            return Ok(result);
+            var toReturn = _mapper.Map<List<GetCompanyNotificationDTO>>(result);
+            return Ok(toReturn);
         }
         [HttpGet("/api/CompanyProfile/{id}/products-own/page-number/{pageNumber}/count/{count}")]
         public async Task<IActionResult> GetCompanyProductsByPage(int id, int pageNumber, int count)
         {
+            _logger.LogInformation($"Get products by page for company with id {id}");
             var query = new GetCompanyProductsByPageQuery
             {
                 CompanyID = id,
@@ -100,7 +118,8 @@ namespace BiddingApp.API.Controllers
             {
                 return NotFound("Page not found!");
             }
-            return Ok(result);
+            var toReturn = _mapper.Map<List<GetProductDTO>>(result);
+            return Ok(toReturn);
         }
         [HttpGet("/api/CompanyProfile/{id}/notifications/page-number/{pageNumber}/count/{count}")]
         public async Task<IActionResult> GetCompanyNotificationsByPage(int id, int pageNumber, int count)
@@ -120,12 +139,14 @@ namespace BiddingApp.API.Controllers
             {
                 return NotFound("Page not found!");
             }
-            return Ok(result);
+            var toReturn = _mapper.Map<List<GetCompanyNotificationDTO>>(result);
+            return Ok(toReturn);
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateCompanyBalance(int id, [FromBody] UpdateCompanyDTO dto)
-        {
+        { 
+            _logger.LogInformation("Update company profile");
             var command = new UpdateCompanyProfileCommand
             {
                 CompanyProfileId = id,
@@ -134,6 +155,11 @@ namespace BiddingApp.API.Controllers
                 CompanyBalance = dto.CompanyBalance,
                 CompanyName = dto.CompanyName
             };
+            if (!ModelState.IsValid)
+            {
+                _logger.LogError(ModelState.ToString());
+                return BadRequest(ModelState);
+            }
             var result = await _mediator.Send(command);
             if(result == null)
             {
@@ -146,6 +172,7 @@ namespace BiddingApp.API.Controllers
         [HttpPut("{id}/CashOutProduct/{productId}")]
         public async Task<IActionResult> CashOutObject(int id, int productId)
         {
+            _logger.LogInformation($"Company with id {id} cash out money from product");
             var command = new CashOutProductCommand
             {
                 ProductId = productId,
@@ -154,6 +181,7 @@ namespace BiddingApp.API.Controllers
             var result = await _mediator.Send(command);
             if(result == null)
             {
+                _logger.LogError("Company or product not found");
                 return NotFound();
             }
             var toReturn = _mapper.Map<GetProductDTO>(result);
@@ -163,6 +191,7 @@ namespace BiddingApp.API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCompanyProfile(int id)
         {
+            _logger.LogInformation($"Delete company with id {id}");
             var command = new DeleteCompanyProfileCommand
             {
                 CompanyId = id
@@ -170,6 +199,7 @@ namespace BiddingApp.API.Controllers
             var result = await _mediator.Send(command);
             if(result == null)
             {
+                _logger.LogError("Company not found");
                 return NotFound("Company not found!");
             }
             return NoContent();

@@ -10,7 +10,7 @@ namespace BiddingApp.API.Profiles
         public ClientProfileProfile()
         {
             CreateMap<CreateClientProfileDTO, CreateClientProfileCommand>();
-            CreateMap<ClientProfile, ClientProfileDTO>();
+            CreateMap<ClientProfile, ClientProfileGetDTO>();
             CreateMap<ClientProfile, ClientProfileGetDTO>();
         }
     }

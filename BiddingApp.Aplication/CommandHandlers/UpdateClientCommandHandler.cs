@@ -20,7 +20,11 @@ namespace BiddingApp.Aplication.CommandHandlers
 
         public async Task<ClientProfile> Handle(UpdateClientCommand request, CancellationToken cancellationToken)
         {
-            var client = new ClientProfile();
+            var client = await _unitOfWork.ClientProfileRepository.GetByIdAsync(request.ClientProfileId);
+            if(client == null)
+            {
+                return null;
+            }
             client.Balance = request.Balance;
             client.ClientName = request.ClientName;
             client.ClientProfileId = request.ClientProfileId;

@@ -10,6 +10,7 @@ namespace BiddingApp.API.Profiles
         {
             CreateMap<Product, GetProductDTO>().ForMember(x => x.CompanyProfileName, opt => opt.MapFrom(x => x.CompanyProfile.CompanyName))
                 .ForMember(x => x.ClientProfileName, opt => opt.MapFrom(x => x.ClientProfile.ClientName));
+            CreateMap<CreateProductDTO, Product>();
         }
     }
 }

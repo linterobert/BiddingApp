@@ -14,6 +14,7 @@ namespace BiddingApp.Validations
         {
             RuleFor(client => client.Balance).GreaterThanOrEqualTo(0.00);
             RuleFor(client => client.ClientName).NotNull().NotEmpty().WithMessage("You must enter your name!");
+            RuleFor(client => client.ClientName).MinimumLength(4).WithMessage("Your name must have minimum 3 letters!"); ;
         }
     }
 }

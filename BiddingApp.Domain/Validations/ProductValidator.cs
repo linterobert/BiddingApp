@@ -12,7 +12,9 @@ namespace BiddingApp.Validations
     {
         public ProductValidator()
         {
-            RuleFor(product => product.StartPrice).Must(x => x > 0.00);
+            RuleFor(product => product.StartPrice).Must(x => x > 0.00).WithMessage("Start price must be higher than 0$!");
+            RuleFor(product => product.FinalTime).Must(x => x.CompareTo(DateTime.Now) >= 0).WithMessage("Final time must be higher then actual time!");
+            RuleFor(product => product.ProductName).Must(x => x.Length >= 2 && x.Length <= 30).WithMessage("The product name must have between 2 and 30 characters!");
         }
     }
 }

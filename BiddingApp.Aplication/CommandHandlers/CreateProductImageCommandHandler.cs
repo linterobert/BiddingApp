@@ -21,7 +21,10 @@ namespace BiddingApp.Aplication.CommandHandlers
         public async Task<ProductImage> Handle(CreateProductImageCommand request, CancellationToken cancellationToken)
         {
             var product = await _unitOfWork.ProductRepository.GetByIdAsync(request.ProductId);
-
+            if(product == null)
+            {
+                return null;
+            }
             ProductImage image = new ProductImage();
 
             if(product != null)

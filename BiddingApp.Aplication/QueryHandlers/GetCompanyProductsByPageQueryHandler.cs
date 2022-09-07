@@ -19,12 +19,12 @@ namespace BiddingApp.Aplication.QueryHandlers
 
         public async Task<List<Product>> Handle(GetCompanyProductsByPageQuery request, CancellationToken cancellationToken)
         {
-            var company = await _unitOfWork.CompanyProfileRepository.GetCompanyWithProducts(request.CompanyID);
+            var company = await _unitOfWork.CompanyProfileRepository.GetByIdAsync(request.CompanyID);
             if (company == null)
             {
                 return null;
             }
-            var products = company.Products;
+            var products = await _unitOfWork.ProductRepository.GetProductsByCompanyId(request.CompanyID);
             return products.Skip((request.PageNumber - 1) * request.Index).Take(request.Index).ToList();
         }
     }

@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BiddingApp.Aplication", "Bi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BiddingApp.Infrastructure", "BiddingApp.Infrastructure\BiddingApp.Infrastructure.csproj", "{4F46B993-FBAA-4F74-9547-6D197B132D22}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BiddingApp.API", "BiddingApp.API\BiddingApp.API.csproj", "{7FB82062-5E7F-421B-A3CE-82B74D4D12A5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BiddingApp.API", "BiddingApp.API\BiddingApp.API.csproj", "{7FB82062-5E7F-421B-A3CE-82B74D4D12A5}"
 	ProjectSection(ProjectDependencies) = postProject
 		{0DA6EFCC-2EA3-4AE5-B5D2-72D354292223} = {0DA6EFCC-2EA3-4AE5-B5D2-72D354292223}
 		{4F46B993-FBAA-4F74-9547-6D197B132D22} = {4F46B993-FBAA-4F74-9547-6D197B132D22}

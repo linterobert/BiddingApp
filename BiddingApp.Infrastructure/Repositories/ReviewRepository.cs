@@ -18,5 +18,10 @@ namespace BiddingApp.Infrastructure.Repositories
         {
             return await _context.Reviews.Include(x => x.ClientProfile).ToListAsync();
         }
+
+        public async Task<List<Review>> GetReviewsByClientID(int clientID)
+        {
+            return await _context.Reviews.Include(x => x.ClientProfile).Include(x => x.Product).Where(x => x.ClientId == clientID).ToListAsync();
+        }
     }
 }

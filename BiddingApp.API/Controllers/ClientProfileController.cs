@@ -2,6 +2,9 @@
 using BiddingApp.Aplication.Commands;
 using BiddingApp.Aplication.Queries;
 using BiddingApp.Domain.DTOs;
+using BiddingApp.Models;
+using BiddingApp.Validations;
+using FluentValidation.Results;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -24,14 +27,24 @@ namespace BiddingApp.API.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateClient(CreateClientProfileDTO dto)
         {
+            _logger.LogInformation("Create new client");
+
+            if (!ModelState.IsValid)
+            {
+                _logger.LogError(ModelState.ToString());
+                return BadRequest(ModelState);
+            }
+
             var command = _mapper.Map<CreateClientProfileCommand>(dto);
             var created = await _mediator.Send(command);
-            return Ok(created);
+            var toReturn = _mapper.Map<ClientProfileGetDTO>(created);
+            return Ok(toReturn);
         }
 
         [HttpGet]
         public async Task<IActionResult> GetClientProfiles()
         {
+            _logger.LogInformation("Get all client profiles");
             var query = new GetClientsQuery();
             var result = await _mediator.Send(query);
             var clients = _mapper.Map<List<ClientProfileGetDTO>>(result);
@@ -41,42 +54,61 @@ namespace BiddingApp.API.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetClientProfileById(int id)
         {
+            _logger.LogInformation($"Get client profile with id {id}");
             var query = new GetClientProfileByIDQuery { ClientProfileId = id };
             var result = await _mediator.Send(query);
 
-            var client = _mapper.Map<ClientProfileDTO>(result);
 
-            if(client == null)
+            if(result == null)
             {
+                _logger.LogError($"Client with id {id} not found");
                 return NotFound("Client not found!");
             }
+            var client = _mapper.Map<ClientProfileGetDTO>(result);
             return Ok(client);
         }
 
         [HttpGet("/api/ClientProfile/{id}/products-own")]
         public async Task<IActionResult> GetClientProducts(int id)
         {
+            _logger.LogInformation($"Get products own by client with id {id}");
             var query = new GetProductsByClientIDQuery
             {
                 ClientID = id
             };
+
             var result = await _mediator.Send(query);
-            return Ok(result);
+
+            if(result == null)
+            {
+                _logger.LogInformation($"Client with id {id} not found");
+                return NotFound("Client not found");
+            }
+            var toReturn = _mapper.Map<List<GetProductDTO>>(result);
+            return Ok(toReturn);
         }
         [HttpGet("/api/ClientProfile/{id}/reviews")]
         public async Task<IActionResult> GetClientReviews(int id)
         {
+            _logger.LogInformation($"Get reviews written by client with id {id}");
             var query = new GetClientReviewsQuery
             {
                 ClientId = id
             };
             var result = await _mediator.Send(query);
-            return Ok(result);
+            if(result == null)
+            {
+                _logger.LogError($"Client with id {id} not found");
+                return NotFound("Client not found!");
+            }
+            var toReturn = _mapper.Map<List<GetReviewDTO>>(result);
+            return Ok(toReturn);
         }
 
         [HttpGet("/api/ClientProfile/{id}/products-own/page-number/{pageNumber}/count/{count}")]
         public async Task<IActionResult> GetClientProductsByPage(int id, int pageNumber, int count)
         {
+            _logger.LogInformation($"Get products by page for client with id {id}");
             var query = new GetClientProductsByPageQuery
             {
                 ClientID = id,
@@ -86,17 +118,21 @@ namespace BiddingApp.API.Controllers
             var result = await _mediator.Send(query);
             if(result == null)
             {
+                _logger.LogError("Client not found");
                 return NotFound("Client not found!");
             }
             if(result.Count == 0)
             {
+                _logger.LogError("Page not found!");
                 return NotFound("Page not found!");
             }
-            return Ok(result);
+            var toReturn = _mapper.Map<List<GetProductDTO>>(result);
+            return Ok(toReturn);
         }
         [HttpGet("/api/ClientProfile/{id}/notifications/page-number/{pageNumber}/count/{count}")]
         public async Task<IActionResult> GetClientNotificationsByPage(int id, int pageNumber, int count)
         {
+            _logger.LogInformation($"Get notifications by page for client with id {id}");
             var query = new GetClientNotificationsByPageQuery
             {
                 ClientID = id,
@@ -106,17 +142,22 @@ namespace BiddingApp.API.Controllers
             var result = await _mediator.Send(query);
             if (result == null)
             {
+                _logger.LogError($"Client with id {id} not found");
                 return NotFound("Client not found!");
             }
             if (result.Count == 0)
             {
+                _logger.LogError($"Page no {pageNumber} not found");
                 return NotFound("Page not found!");
             }
-            return Ok(result);
+            var toReturn = _mapper.Map<List<GetClientNotificationDTO>>(result);
+            return Ok(toReturn);
         }
+
         [HttpGet("/api/ClientProfile/{id}/notifications")]
         public async Task<IActionResult> GetClientNotifications(int id)
         {
+            _logger.LogInformation($"Get notifications for client with id {id}");
             var query = new GetNotificationsByClientQuery
             {
                 ClientID = id
@@ -125,14 +166,17 @@ namespace BiddingApp.API.Controllers
 
             if (result == null)
             {
+                _logger.LogError($"Client with id {id} not found");
                 return NotFound("Client not found!");
             }
-            return Ok(result);
+            var toReturn = _mapper.Map<List<GetClientNotificationDTO>>(result);
+            return Ok(toReturn);
         }
 
         [HttpGet("/api/ClientProfile/{id}/reviews/page-number/{pageNumber}/count/{count}")]
         public async Task<IActionResult> GetClientReviewsByPage(int id, int pageNumber, int count)
         {
+            _logger.LogInformation($"Get notification by page for client with id {id}");
             var query = new GetClientReviewsByPageQuery
             {
                 ClientID = id,
@@ -142,19 +186,22 @@ namespace BiddingApp.API.Controllers
             var result = await _mediator.Send(query);
             if (result == null)
             {
+                _logger.LogError($"Client with id {id} not found");
                 return NotFound("Client not found!");
             }
             if (result.Count == 0)
             {
+                _logger.LogError($"Page no {pageNumber} not found");
                 return NotFound("Page not found!");
             }
-            return Ok(result);
+            var toReturn = _mapper.Map<List<GetReviewDTO>>(result);
+            return Ok(toReturn);
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateClient(int id, [FromBody] ClientProfilePutDTO dto)
         {
-
+            _logger.LogInformation("Update client profile");
             var command = new UpdateClientCommand
             {
                 ClientName = dto.ClientName,
@@ -163,10 +210,16 @@ namespace BiddingApp.API.Controllers
                 ProfilePhotoURL = dto.ProfilePhotoURL
             };
 
+            if (!ModelState.IsValid)
+            {
+                _logger.LogError(ModelState.ToString());
+                return BadRequest(ModelState);
+            }
             var result = await _mediator.Send(command);
 
             if(result == null)
             {
+                _logger.LogError($"Client with id {id} not found");
                 return NotFound("Client not found!");
             }
 
@@ -176,6 +229,7 @@ namespace BiddingApp.API.Controllers
         [HttpPut("{id}/product/{productId}/offer/{sum}")]
         public async Task<IActionResult> MakeOffer(int id, int productId, double sum)
         {
+            _logger.LogInformation($"Client with id {id} make offer for product with id {productId}");
             var command = new MakeOfferCommand
             {
                 ClientId = id,
@@ -185,6 +239,7 @@ namespace BiddingApp.API.Controllers
             var result = await _mediator.Send(command);
             if (result == null)
             {
+                _logger.LogError("Imposible to make offer");
                 return NotFound();
             }
             var commandProd = new GetProductByIDQuery
@@ -194,6 +249,7 @@ namespace BiddingApp.API.Controllers
             var product = await _mediator.Send(commandProd);
             if(product.ClientProfileId != null)
             {
+                _logger.LogInformation("Sent notification for client!");
                 var command3 = new CreateClientNotificationCommand
                 {
                     ClientID = (int)product.ClientProfileId,
@@ -236,6 +292,7 @@ namespace BiddingApp.API.Controllers
         [HttpPut("{id}/funds/{cardNumber}")]
         public async Task<IActionResult> AddFunds(int id, string cardNumber, [FromBody] AddFundsDTO dto)
         {
+            _logger.LogInformation($"Add money for client with id {id}");
             var command = new AddFundsCommand
             {
                 ClientProfileId = id,
@@ -248,6 +305,7 @@ namespace BiddingApp.API.Controllers
 
             if(result == null)
             {
+                _logger.LogError("Client or card not found");
                 return NotFound("Client or card not found!");
             }
             var toReturn = _mapper.Map<ClientProfileGetDTO>(result);
@@ -257,6 +315,7 @@ namespace BiddingApp.API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteClientProfile(int id)
         {
+            _logger.LogInformation($"Delete client with id {id}");
             var command = new DeleteClientProfileCommand
             {
                 ClientProfileId = id
@@ -265,6 +324,7 @@ namespace BiddingApp.API.Controllers
 
             if(result == null)
             {
+                _logger.LogError("Client not found");
                 return NotFound("Client not found!");
             }
 
