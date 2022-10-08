@@ -86,6 +86,23 @@ namespace BiddingApp.API.Controllers
             }
             return Ok(result);
         }
+        [HttpGet("{id}/rating")]
+        public async Task<IActionResult> GetProductRating(int id)
+        {
+            _logger.LogInformation($"Get product rating with id {id}");
+            var query = new GetProductRatingQuery
+            {
+                ProductID = id
+            };
+            var result = await _mediator.Send(query);
+
+            if (result == null)
+            {
+                _logger.LogError($"Product with id {id} not found.");
+                return NotFound("Product not found!");
+            }
+            return Ok(result);
+        }
         [HttpGet("/api/Product/pageNumber/{pageNumber}/index/{index}")]
         public async Task<IActionResult> GetProductByPage(int pageNumber, int index)
         {

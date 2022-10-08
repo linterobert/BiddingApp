@@ -21,7 +21,7 @@ namespace BiddingApp.Aplication.CommandHandlers
         {
             var card = await _unitOfWork.CardRepository.GetCardByCardNumber(request.CardNumber);
             var client = await _unitOfWork.ClientProfileRepository.GetByIdAsync(request.ClientProfileId);
-            if( client != null && card != null && card.ClientProfileId == client.ClientProfileId && card.ExpireDate.CompareTo(DateTime.Now) >= 0 && card.Pin == request.PIN && card.CVC == request.CVC)
+            if( (client.Balance + request.Sum) >= 0 && client != null && card != null && card.ClientProfileId == client.ClientProfileId && card.ExpireDate.CompareTo(DateTime.Now) >= 0 && card.Pin == request.PIN && card.CVC == request.CVC)
             {
                 client.Balance += request.Sum;
                 await _unitOfWork.ClientProfileRepository.Update(client);

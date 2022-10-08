@@ -20,7 +20,7 @@ namespace BiddingApp.Aplication.CommandHandlers
         {
             var product = await _unitOfWork.ProductRepository.GetProductByID(request.ProductId);
             var company = await _unitOfWork.CompanyProfileRepository.GetByIdAsync(request.CompanyId);
-            if (product.CompanyProfileId != company.CompanyProfileId || product.CashOut == true || product.FinalTime.CompareTo(DateTime.Now) < 0)
+            if (product == null || company == null || product.CashOut == true)
             {
                 return null;
             }

@@ -12,5 +12,7 @@ namespace BiddingApp.Aplication
         Task<Review> GetReviewByProductIDandClientID(int productID, int clientID);
         Task<List<Review>> GetReviews();
         Task<List<Review>> GetReviewsByClientID(int clientID);
+
+        Task<Review> GetReviewByID(int id);
     }
 }

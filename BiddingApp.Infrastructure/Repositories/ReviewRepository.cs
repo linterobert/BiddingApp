@@ -9,6 +9,11 @@ namespace BiddingApp.Infrastructure.Repositories
     {
         public ReviewRepository(BiddingAppContext _context) : base(_context) { }
 
+        public async Task<Review> GetReviewByID(int id)
+        {
+            return await _context.Reviews.Include( x => x.ClientProfile ).Where(x => x.ReviewID == id).FirstOrDefaultAsync();
+        }
+
         public async Task<Review> GetReviewByProductIDandClientID(int productID, int clientID)
         {
             return await _context.Reviews.Where(x => x.ProductId == productID && x.ClientId == clientID).FirstOrDefaultAsync();

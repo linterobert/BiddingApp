@@ -198,6 +198,59 @@ namespace BiddingApp.API.Controllers
             return Ok(toReturn);
         }
 
+        [HttpGet("/api/ClientProfile/{id}/reviews/max-page-number/count/{count}")]
+        public async Task<IActionResult> GetClientReviewsMaxPage(int id, int count)
+        {
+            _logger.LogInformation($"Get notification by page for client with id {id}");
+            var query = new GetMaxPageReviewByClientIDQuery
+            {
+                ClientID = id,
+                Index = count
+            };
+            var result = await _mediator.Send(query);
+            if (result == null)
+            {
+                _logger.LogError($"Client with id {id} not found");
+                return NotFound("Client not found!");
+            }
+            return Ok(result);
+        }
+
+        [HttpGet("/api/ClientProfile/{id}/notifications/max-page-number/count/{count}")]
+        public async Task<IActionResult> GetClientNotificationsMaxPage(int id, int count)
+        {
+            _logger.LogInformation($"Get notification max page for client with id {id}");
+            var query = new GetMaxPageClientNotificationQuery
+            {
+                ClientID = id,
+                Index = count
+            };
+            var result = await _mediator.Send(query);
+            if (result == null)
+            {
+                _logger.LogError($"Client with id {id} not found");
+                return NotFound("Client not found!");
+            }
+            return Ok(result);
+        }
+        [HttpGet("/api/ClientProfile/{id}/products-own/max-page-number/count/{count}")]
+        public async Task<IActionResult> GetClientProductsMaxPage(int id, int count)
+        {
+            _logger.LogInformation($"Get max page product for client with id {id}");
+            var query = new GetMaxPageProductsOwnByClientIDQuery
+            {
+                CompanyID = id,
+                Index = count
+            };
+            var result = await _mediator.Send(query);
+            if (result == null)
+            {
+                _logger.LogError($"Client with id {id} not found");
+                return NotFound("Client not found!");
+            }
+            return Ok(result);
+        }
+
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateClient(int id, [FromBody] ClientProfilePutDTO dto)
         {

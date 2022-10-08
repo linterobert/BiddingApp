@@ -1,11 +1,12 @@
 ﻿using BiddingApp.Domain.Models;
 using BiddingApp.Infrastructure.Configurations;
 using BiddingApp.Models;
+using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.EntityFrameworkCore;
 
 namespace BiddingApp.Infrastructure.Data
 {
-    public class BiddingAppContext : DbContext
+    public class BiddingAppContext : IdentityDbContext<User>
     {
         public BiddingAppContext(DbContextOptions<BiddingAppContext> options) : base(options) { }
         public DbSet<ClientProfile> ClientProfiles { get; set; }

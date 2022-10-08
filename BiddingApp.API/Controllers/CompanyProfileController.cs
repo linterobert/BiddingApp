@@ -142,6 +142,41 @@ namespace BiddingApp.API.Controllers
             var toReturn = _mapper.Map<List<GetCompanyNotificationDTO>>(result);
             return Ok(toReturn);
         }
+        [HttpGet("/api/CompanyProfile/{id}/notifications/max-page-number/count/{count}")]
+        public async Task<IActionResult> GetCompanyNotificationsMaxPage(int id, int count)
+        {
+            _logger.LogInformation($"Get notification max page for client with id {id}");
+            var query = new GetMaxPageCompanyNotificationQuery
+            {
+                CompanyID = id,
+                Index = count
+            };
+            var result = await _mediator.Send(query);
+            if (result == null)
+            {
+                _logger.LogError($"Client with id {id} not found");
+                return NotFound("Client not found!");
+            }
+            return Ok(result);
+        }
+
+        [HttpGet("/api/CompanyProfile/{id}/products-own/max-page-number/count/{count}")]
+        public async Task<IActionResult> GetClientReviewsMaxPage(int id, int count)
+        {
+            _logger.LogInformation($"Get notification by page for client with id {id}");
+            var query = new GetMaxPageProductsOwnByCompanyIDQuery
+            {
+                CompanyID = id,
+                Index = count
+            };
+            var result = await _mediator.Send(query);
+            if (result == null)
+            {
+                _logger.LogError($"Client with id {id} not found");
+                return NotFound("Client not found!");
+            }
+            return Ok(result);
+        }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateCompanyBalance(int id, [FromBody] UpdateCompanyDTO dto)

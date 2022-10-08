@@ -18,7 +18,7 @@ namespace BiddingApp.Aplication.QueryHandlers
         }
         public async Task<Review> Handle(GetReviewByIDQuery request, CancellationToken cancellationToken)
         {
-            return await _unitOfWork.ReviewRepository.GetByIdAsync(request.ReviewID);
+            return await _unitOfWork.ReviewRepository.GetReviewByID(request.ReviewID);
         }
     }
 }

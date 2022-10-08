@@ -35,7 +35,10 @@ builder.Services.AddMediatR(typeof(CreateClientProfileCommand));
 builder.Services.AddAutoMapper(typeof(Program));
 
 var app = builder.Build();
-
+app.UseCors(x => x
+    .AllowAnyOrigin()
+    .AllowAnyMethod()
+    .AllowAnyHeader());
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

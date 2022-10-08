@@ -15,16 +15,23 @@ namespace BiddingApp.API.Controllers
     {
         private readonly IMediator _mediator;
         private readonly IMapper _mapper;
-        
-        public ReviewController(IMediator mediator, IMapper mapper)
+        private readonly ILogger _logger;
+        public ReviewController(IMediator mediator, IMapper mapper, ILogger<ReviewController> logger)
         {
             _mediator = mediator;
             _mapper = mapper;
+            _logger = logger;
         }
 
         [HttpPost]
         public async Task<IActionResult> CreateReview(CreateReviewDTO dto)
         {
+            _logger.LogInformation("Create review");
+            if (!ModelState.IsValid)
+            {
+                _logger.LogError(ModelState.ToString());
+                return BadRequest(ModelState);
+            }
             var command = new CreateReviewCommand
             {
                 ProductId = dto.ProductId,
@@ -35,6 +42,7 @@ namespace BiddingApp.API.Controllers
             var result = await _mediator.Send(command);
             if (result == null)
             {
+                _logger.LogInformation($"Client with id {dto.ClientId} already add a comm at product with id {dto.ProductId}");
                 return NotFound("You already comment at this product!");
             }
             var toReturn = _mapper.Map<ReviewDTO>(result);
@@ -42,8 +50,9 @@ namespace BiddingApp.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetProducts()
+        public async Task<IActionResult> GetReviews()
         {
+            _logger.LogInformation("Ger reviews");
             var command = new GetReviewsQuery();
             var result = await _mediator.Send(command);
             var toReturn = _mapper.Map<List<GetReviewDTO>>(result);
@@ -53,6 +62,7 @@ namespace BiddingApp.API.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetReviewById(int id)
         {
+            _logger.LogInformation($"Get review with id {id}");
             var command = new GetReviewByIDQuery();
             var result = await _mediator.Send(command);
             return Ok(result);
@@ -61,6 +71,7 @@ namespace BiddingApp.API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteReview(int id)
         {
+            _logger.LogInformation($"Delete review with id {id}");
             var command = new DeleteReviewCommand
             {
                 ReviewID = id
@@ -68,6 +79,7 @@ namespace BiddingApp.API.Controllers
             var result = await _mediator.Send(command);
             if(result == null)
             {
+                _logger.LogError($"Review with id {id} not found");
                 return NotFound("Review not found!");
             }
             return NoContent();
@@ -76,6 +88,7 @@ namespace BiddingApp.API.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateReview(int id, [FromBody] UpdateReviewDTO dto)
         {
+            _logger.LogInformation("Update review");
             var command = new UpdateReviewCommand
             {
                 ReviewId = id,
